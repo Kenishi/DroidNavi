@@ -10,7 +10,7 @@ from distutils.core import setup
 import py2exe
 
 setup(name = "DroidNavi",
-      version = "0.1",
+      version = "1.0",
       author = "Jeremy May",
       url = "http://github.com/Kenishi",
       license = "GNU General Public License (GPL) v2",
