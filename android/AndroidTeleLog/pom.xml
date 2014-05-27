@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>AndroidTeleLog</groupId>
+  <artifactId>AndroidTeleLog</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Android TeleLog</name>
+  <description>The pair for the PC TeleLog. This is the Andriod App that runs and monitors the phone state, sending events when they occur back to the waiting PCs.</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source/>
+          <target/>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.codehaus.jackson</groupId>
+  		<artifactId>jackson-core-lgpl</artifactId>
+  		<version>1.9.13</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.codehaus.jackson</groupId>
+  		<artifactId>jackson-mapper-lgpl</artifactId>
+  		<version>1.9.13</version>
+  	</dependency>
+  </dependencies>
+</project>
