@@ -8,6 +8,8 @@
   </parent>
   
   <artifactId>pctelelog-gateway-server</artifactId>
+  <name>DroidNavi-Server</name>
+  <packaging>jar</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <outputDirectory>bin</outputDirectory>
@@ -23,6 +25,7 @@
       <plugin>
       	<groupId>org.apache.maven.plugins</groupId>
       	<artifactId>maven-jar-plugin</artifactId>
+		<version>2.4</version>
       	<configuration>
       		<archive>
   				<manifest>
