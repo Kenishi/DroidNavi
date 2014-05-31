@@ -4,6 +4,7 @@ Created on May 18, 2014
 @author: Kei
 '''
 import sys
+import glob
 
 from PyQt4 import QtGui
 from py4j.java_gateway import JavaGateway, GatewayClient
@@ -17,8 +18,15 @@ class Launcher:
     JavaGateway will be in the 'lib' subfolder.
     '''
     
-    def __init__(self):             
-        command = ["java", "-jar", "./lib/pctelelog-gateway-server-0.0.1-SNAPSHOT.jar"]
+    def __init__(self):
+    	# Look for the gateway server
+    	file = glob.glob('../lib/pctelelog-gateway-server*')
+    	if len(file) == 0:
+    		file = glob.glob('./lib/pctelelog-gateway-server*')
+    	if len(file) == 0:
+    		raise IOException("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder.")
+    		
+        command = ["java", "-jar", file[0]]
         serverProc = subprocess.Popen(command)
         if(serverProc != None):
             try:
