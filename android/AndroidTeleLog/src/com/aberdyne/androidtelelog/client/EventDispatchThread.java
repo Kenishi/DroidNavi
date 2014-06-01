@@ -53,8 +53,15 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	@Override
 	public void run() {
 		logger.trace("ENTRY EventDispatchThread.run");
+		
+		CheckStandByServerThread checkStandByServerThread = new CheckStandByServerThread(this);
 		while(!isStop) {
-			checkStandByServers();
+			// Check standby servers if we aren't currently
+			if(! checkStandByServerThread.isAlive()) { 
+				checkStandByServerThread = new CheckStandByServerThread(this);
+				checkStandByServerThread.start();
+			}
+			
 			if(m_queue.size() == 0 || m_connectedServers.size() == 0) {
 				try {
 					sleep(SLEEP_TIMEOUT);
@@ -80,6 +87,10 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 					ServerListManager.updateServer(m_context, server);
 				}
 			}
+		}
+		
+		if(checkStandByServerThread != null && checkStandByServerThread.isAlive()) {
+			checkStandByServerThread.quit();
 		}
 		setAllToStandby();
 		ServerListManager.removeServerListListener(this);
@@ -182,24 +193,6 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	}
 	
 	/**
-	 * Check servers on standby to see if they have come online.
-	 * Move the server from standby to connected.
-	 */
-	private void checkStandByServers() {
-		for(ServerConnection server : m_standbyServers) {
-			boolean result = server.connect();
-			if(result == true) {
-				// Remove from standby and put in connected
-				removeStandByServer(server);
-				addConnectedServer(server);
-				
-				// Let others know of the change
-				ServerListManager.updateServer(m_context, server);
-			}
-		}
-	}
-	
-	/**
 	 * Adds a server to the standby set.
 	 * 
 	 * Servers on standby are not connected but will be checked occasionally
@@ -280,4 +273,58 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 		}
 		return event;
 	}
+	
+	/**
+	 * A small thread to check the standby servers to see 
+	 * 	if the server has come online.
+	 * 
+	 * Due to the blocking nature of connect() testing for conenction
+	 * 	needs to be done inside a thread otherwise it can interfere
+	 * 	with message dispatch responsiveness.
+	 * 
+	 * @author Jeremy May
+	 *
+	 */
+	private class CheckStandByServerThread extends Thread {
+		private Thread m_parent = null;
+		private volatile boolean isStop = false;
+		
+		public CheckStandByServerThread(Thread parent) {
+			m_parent = parent;
+		}
+		public void run() {
+			checkStandByServers();
+			
+			// Interrupt dispatch, it could be sleeping.
+			if(m_parent != null && m_parent.isAlive()) {
+				m_parent.interrupt();
+			}
+		}
+		
+		public void quit() {
+			isStop = true;
+			this.interrupt();
+		}
+		/**
+		 * Check servers on standby to see if they have come online.
+		 * Move the server from standby to connected.
+		 */
+		private void checkStandByServers() {
+			logger.debug("Checking standby servers.");
+			for(ServerConnection server : m_standbyServers) {
+				if(isStop) break;
+				boolean result = server.connect();
+				if(isStop) break;
+				
+				if(result == true) {
+					// Remove from standby and put in connected
+					removeStandByServer(server);
+					addConnectedServer(server);
+					
+					// Let others know of the change
+					ServerListManager.updateServer(m_context, server);
+				}
+			}
+		}
+	};
 }

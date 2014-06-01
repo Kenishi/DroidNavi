@@ -1,6 +1,7 @@
 package com.aberdyne.androidtelelog.client;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class ServerConnection implements Comparable<String> {
 	
 	private static final int SERVER_PORT = 43212;
 	private static final int READ_TIMEOUT = 10 * 1000; // 10 second read timeout
+	private static final int CONNECT_TIMEOUT = 3 * 1000; // 3 second connect timeout
 	
 	private Socket m_server = null;
 	private String m_ipStr = null;
@@ -127,6 +129,22 @@ public class ServerConnection implements Comparable<String> {
 		return m_isStandby;
 	}
 
+	public boolean isConnected() {
+		if(m_server == null) {
+			return false;
+		}
+		
+		return m_server.isConnected();
+	}
+	
+	public boolean isClosed() {
+		if(m_server == null) {
+			return true;
+		}
+		
+		return m_server.isClosed();
+	}
+	
 	/**
 	 * Helper function for sending unserialized events
 	 * @param event An event
@@ -250,12 +268,15 @@ public class ServerConnection implements Comparable<String> {
 		logger.debug("IP: {} PORT: {}", ip, port);
 		Socket socket = null;
 		try {
-			socket = new Socket(ip, port);
+			socket = new Socket();
+			socket.connect(new InetSocketAddress(ip, port), CONNECT_TIMEOUT);
 			socket.setSoTimeout(READ_TIMEOUT);
 		} catch (UnknownHostException e) {
-			logger.error("Catching: {}", e.getMessage());
+			logger.error("Catching UnknownHostException: {}", e.getMessage());
+			socket = null;
 		} catch (IOException e) {
-			logger.error("Catching: {}", e.getMessage());
+			logger.error("Catching IOException: {}", e.getMessage());
+			socket = null;
 		}
 		
 		logger.trace("EXIT ServerConnection.createSocket: {}", socket);
