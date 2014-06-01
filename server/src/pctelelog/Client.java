@@ -161,6 +161,12 @@ public class Client extends Thread {
 		logger.info("Reading next event off stream");
 		parser = factory.createJsonParser(m_client.getInputStream());
 		JsonNode node = parser.readValueAsTree();
+		/* Sometimes during socket connection the handshake doesn't
+		 * work right and node can return null.
+		 */
+		if(node == null) {
+			throw new IOException("Error retrieving JSON tree node.");
+		}
 		event = EventSerializer.deserialize(node);
 	
 		
