@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to Java gateway server and execute maven build
-cd ./server/PCTeleLog
+cd ./server
 mvn clean install
 rc=$?
 
@@ -11,8 +11,8 @@ if [[ $rc != 0 ]] ; then
 fi
 
 # Change to Python UI and execute maven build
-cd ../pyqt-ui/PCTelelog-PyQt
-mvn clean dependency:copy-dependencies assembly:assembly
+cd ../pyqt-ui
+mvn clean dependency:copy-dependencies package
 
 if [[ $rc != 0 ]] ; then
 	echo "Error building PyTeleLog UI"
@@ -20,6 +20,8 @@ if [[ $rc != 0 ]] ; then
 fi
 
 ## Move to ./bin  ##
+# Back to root
+cd ../
 
 # Check bin exists
 if [ -d ./bin ] ; then
@@ -30,4 +32,4 @@ else
 fi
 
 # Copy
-cp ./target/pctelelog-pyqt-*-distribution.zip ./bin/
+cp ./pyqt-ui/target/pctelelog-pyqt-*-distribution.zip ./bin/
