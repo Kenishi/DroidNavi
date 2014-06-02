@@ -10,6 +10,10 @@
   <artifactId>pctelelog-gateway-server</artifactId>
   <name>DroidNavi-Server</name>
   <packaging>jar</packaging>
+  
+  <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <outputDirectory>bin</outputDirectory>

@@ -39,10 +39,15 @@ public enum EventType {
 	 * Fired by the Java server in instances that it has to shutdown.
 	 * This event would likely require the GUI to have to restart.
 	 */
-	SERVERSHUTDOWN, // Fired to EventListeners when server is shutting down
+	SERVERSHUTDOWN,
 	
 	/**
 	 * Fired when a socket has closed (possibly unexpectedly)
 	 */
-	CLIENT_SOCKET_CLOSE // Fired when a client socket closes
+	CLIENT_SOCKET_CLOSE, 
+	
+	/**
+	 * Heartbeat, socket state check event
+	 */
+	HEARTBEAT
 }

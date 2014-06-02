@@ -19,6 +19,7 @@ import pctelelog.Device;
 			@Type(name = "CallEnded", value = CallEndedEvent.class),
 			@Type(name = "Shutdown", value = ShutdownEvent.class),
 			@Type(name = "Hello", value = HelloEvent.class),
+			@Type(name = "HeartBeat", value = HeartBeat.class)
 		}
 )
 
