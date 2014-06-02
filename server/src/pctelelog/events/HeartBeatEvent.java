@@ -5,15 +5,15 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class HeartBeat extends AbstractEvent {
+public class HeartBeatEvent extends AbstractEvent {
 	private static final EventType event_type = EventType.HEARTBEAT;
 	
-	public HeartBeat() {
+	public HeartBeatEvent() {
 		super(event_type, new Date());
 	}
 	
 	@JsonCreator
-	public HeartBeat(@JsonProperty("time") Date time) {
+	public HeartBeatEvent(@JsonProperty("time") Date time) {
 		super(event_type, time);
 	}
 }

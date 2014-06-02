@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import pctelelog.EventSerializer;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.ClientConnectEvent;
-import pctelelog.events.HeartBeat;
+import pctelelog.events.HeartBeatEvent;
 import pctelelog.events.HelloEvent;
 import pctelelog.events.ShutdownEvent;
 
@@ -162,12 +162,12 @@ public class ServerConnection implements Comparable<String> {
 	public boolean heartbeat() {
 		Date now = new Date();
 		if(m_lastEvent == null) {
-			return sendEvent(new HeartBeat());
+			return sendEvent(new HeartBeatEvent());
 		}
 		else {
 			long diff = now.getTime() - m_lastEvent.getTime();
 			if(diff > HEARTBEAT_DELAY) {
-				return sendEvent(new HeartBeat());
+				return sendEvent(new HeartBeatEvent());
 			}
 		}
 		return true;

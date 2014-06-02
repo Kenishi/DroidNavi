@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import pctelelog.events.AbstractEvent;
-import pctelelog.events.HeartBeat;
+import pctelelog.events.HeartBeatEvent;
 import pctelelog.internal.events.ClientSocketClosedEvent;
 import py4j.Py4JException;
 
@@ -62,7 +62,7 @@ public class EventOperator {
 		if(event instanceof ClientSocketClosedEvent) {
 			m_pool.removeClient(client);
 		}
-		else if(event instanceof HeartBeat) {  // Do nothing with heartbeats
+		else if(event instanceof HeartBeatEvent) {  // Do nothing with heartbeats
 			return; 
 		}
 		event = EventDeviceResolver.resolveDevice(client, event);
