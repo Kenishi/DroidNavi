@@ -26,8 +26,15 @@ class POpenLauncher:
         if len(jar_file) == 0:
             raise IOError("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder.")
      
+        ## Start Server as Subprocess
         command = ["java", "-jar", jar_file[0]]
-        serverProc = subprocess.Popen(command)
+        
+        # Set process to have no window
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        
+        serverProc = subprocess.Popen(args=command, startupinfo=startupinfo)
+        
         if(serverProc != None):
             time.sleep(1) # Give the server time to start up
             try:
