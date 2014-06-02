@@ -4,9 +4,7 @@ Created on May 6, 2014
 @author: Kei
 '''
 
-import sys
 from Queue import Queue
-from threading import Thread
 
 from PyQt4 import QtGui, QtCore
 from components.NotifyWidget import NotifyWidget
