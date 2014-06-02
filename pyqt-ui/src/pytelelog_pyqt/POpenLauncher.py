@@ -5,30 +5,31 @@ Created on May 18, 2014
 '''
 import sys
 import glob
+import time
 
 from PyQt4 import QtGui
-from py4j.java_gateway import JavaGateway, GatewayClient
+from py4j.java_gateway import JavaGateway
 from MainWindow import MainWindow
-from logging import StreamHandler, Logger, getLogger, DEBUG
 import subprocess
 
-class Launcher:
+class POpenLauncher:
     '''
     Launcher is used for deployment launching when the 
     JavaGateway will be in the 'lib' subfolder.
     '''
     
     def __init__(self):
-    	# Look for the gateway server
-    	file = glob.glob('../lib/pctelelog-gateway-server*')
-    	if len(file) == 0:
-    		file = glob.glob('./lib/pctelelog-gateway-server*')
-    	if len(file) == 0:
-    		raise IOException("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder.")
-    		
-        command = ["java", "-jar", file[0]]
+        # Look for the gateway server
+        jar_file = glob.glob('../lib/pctelelog-gateway-server*')
+        if len(jar_file) == 0:
+            jar_file = glob.glob('./lib/pctelelog-gateway-server*')
+        if len(jar_file) == 0:
+            raise IOError("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder.")
+     
+        command = ["java", "-jar", jar_file[0]]
         serverProc = subprocess.Popen(command)
         if(serverProc != None):
+            time.sleep(1) # Give the server time to start up
             try:
                 self.__gateway = JavaGateway(start_callback_server=True)
             except:
@@ -49,5 +50,5 @@ class Launcher:
             
        
 if __name__ == '__main__':
-    Launcher()
+    POpenLauncher()
     pass
