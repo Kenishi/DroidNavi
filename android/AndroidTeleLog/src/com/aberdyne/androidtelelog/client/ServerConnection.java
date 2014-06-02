@@ -229,7 +229,6 @@ public class ServerConnection implements Comparable<String> {
 			} catch (IOException e) {
 				setStandbyStatus(true);
 				shutdown(false);
-				e.printStackTrace();
 				logger.debug("Catching: {}", e);
 				logger.trace("EXIT ServerConnection.sendEvent:{}", Boolean.FALSE);
 				return false;
@@ -240,7 +239,6 @@ public class ServerConnection implements Comparable<String> {
 			logger.trace("EXIT ServerConnection.sendEvent: {}", Boolean.FALSE);
 			return false;
 		}
-		logger.info("Handshake PASS");
 		logger.trace("EXIT ServerConnection.sendEvent: {}", Boolean.TRUE);
 		return true;
 	}
