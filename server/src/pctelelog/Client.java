@@ -165,7 +165,7 @@ public class Client extends Thread {
 		 * work right and node can return null.
 		 */
 		if(node == null) {
-			throw new IOException("Error retrieving JSON tree node.");
+			return null;
 		}
 		event = EventSerializer.deserialize(node);
 	
