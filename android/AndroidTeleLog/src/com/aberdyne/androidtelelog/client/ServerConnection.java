@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import pctelelog.EventSerializer;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.ClientConnectEvent;
+import pctelelog.events.HeartBeat;
 import pctelelog.events.HelloEvent;
 import pctelelog.events.ShutdownEvent;
 
@@ -25,11 +26,14 @@ public class ServerConnection implements Comparable<String> {
 	private static final int SERVER_PORT = 43212;
 	private static final int READ_TIMEOUT = 10 * 1000; // 10 second read timeout
 	private static final int CONNECT_TIMEOUT = 3 * 1000; // 3 second connect timeout
+	private static final int HEARTBEAT_DELAY = 5 * 1000; // 5 second delay between heartbeat checks
 	
 	private Socket m_server = null;
 	private String m_ipStr = null;
 	private boolean m_isActiveSocket = false; // Is the socket connect()-able?
 	private boolean m_isStandby = true;
+	
+	private Date m_lastEvent = null; // Timestamp for last event sent, used for heartbeat()
 
 	/**
 	 * Protected constructor that allows specifying whether the socket
@@ -146,6 +150,30 @@ public class ServerConnection implements Comparable<String> {
 	}
 	
 	/**
+	 * Try sending a heartbeat to the server to check socket state.
+	 * 
+	 * This is a simple check with no expected reply. If the socket is dead,
+	 * 	then an exception should be thrown and the ServerConnection state
+	 * 	moved to standby.
+	 * 
+	 * @return Return true if heartbeat was ok or not needed. False if it failed
+	 * 	and the socket is shutdown.
+	 */
+	public boolean heartbeat() {
+		Date now = new Date();
+		if(m_lastEvent == null) {
+			return sendEvent(new HeartBeat());
+		}
+		else {
+			long diff = now.getTime() - m_lastEvent.getTime();
+			if(diff > HEARTBEAT_DELAY) {
+				return sendEvent(new HeartBeat());
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Helper function for sending unserialized events
 	 * @param event An event
 	 * @return True if no problems occurred while sending, False otherwise.
@@ -188,7 +216,7 @@ public class ServerConnection implements Comparable<String> {
 	 * @param json The serialized event to send
 	 * @return True if successful, False otherwise.
 	 */
-	private boolean sendEvent(Socket server, String json) {
+	private synchronized boolean sendEvent(Socket server, String json) {
 		logger.trace("ENTRY ServerConnection.sendEvent");
 		logger.debug("Server: {} JSON: {}", server, json);
 		assert server != null;
@@ -197,6 +225,7 @@ public class ServerConnection implements Comparable<String> {
 			try {
 				logger.info("Writing bytes");
 				server.getOutputStream().write(json.getBytes());
+				m_lastEvent = new Date(); // Update last event
 			} catch (IOException e) {
 				setStandbyStatus(true);
 				shutdown(false);
