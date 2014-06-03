@@ -62,6 +62,6 @@ All the other external libraries are in the "ext_libs" folder and should already
 2. Run the command: `mvn clean install assembly:single`
   * This will build the server and copy the Python files into the "distribution" folder.
 3. To create the python exe. Change Directory to: /distribution/target/droidnavi-VERSION-bin/
-4. Run: `python setup.py py2exe'
+4. Run: `python setup.py py2exe`
   * This will build the python code into an exe. You can find this in the /dist folder.
 5. Run "DroidNavi.exe" to start the server and UI.
