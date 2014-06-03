@@ -3,8 +3,7 @@ List of things that still need done for the DroidNavi.
 
 * Add an About screen in both the PC UI and Android.
 	* Include License references in the About
-* FIX: Currently there is no heartbeat set up so its not possible to know when connectiosn might drop
-	uncleanly. So a heartbeat needs to be added to the protocol to watch for this.
+* Add a "Starting server.." dialog when launching. Will have to rework how MainWindow works.
 	
 * Add Preference to PC UI
 * Add a more substantial UI for the PC ver instead of a blank dialog
