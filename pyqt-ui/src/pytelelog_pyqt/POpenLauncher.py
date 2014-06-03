@@ -19,12 +19,17 @@ class POpenLauncher:
     '''
     
     def __init__(self):
+        # Start QT
+        app = QtGui.QApplication(sys.argv)
+        
         # Look for the gateway server
         jar_file = glob.glob('../lib/pctelelog-gateway-server*')
         if len(jar_file) == 0:
             jar_file = glob.glob('./lib/pctelelog-gateway-server*')
         if len(jar_file) == 0:
-            raise IOError("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder.")
+            info = QtGui.QMessageBox()
+            info.setText("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder. Exiting")
+            info.exec_()
      
         ## Start Server as Subprocess
         command = ["java", "-jar", jar_file[0]]
@@ -37,18 +42,27 @@ class POpenLauncher:
         
         if(serverProc != None):
             time.sleep(1) # Give the server time to start up
-            try:
-                self.__gateway = JavaGateway(start_callback_server=True)
-            except:
-                try:
-                    self.__gateway.shutdown()
-                except:
-                    sys.exit(1)
-                sys.exit(1)
-                
-            print self.__gateway
             
-            app = QtGui.QApplication(sys.argv)
+            '''Attempt to setup connection to gateway'''
+            attempt_count = 0 #
+            self.__gateway = None
+            while not self.__gateway:
+                try:
+                    self.__gateway = JavaGateway(start_callback_server=True)
+                except:
+                    self.__gateway = None
+                    attempt_count += 1
+                    if attempt_count > 5:
+                        break
+                    time.sleep(3)
+            # Exit if we got no connection
+            if not self.__gateway:
+                info = QtGui.QMessageBox()
+                info.setText("DroidNavi server failed to start. Exiting")
+                info.exec_()
+                serverProc.kill()
+                sys.exit(1)
+                    
             mainWindow = MainWindow(self.__gateway)
             
             result = app.exec_()
