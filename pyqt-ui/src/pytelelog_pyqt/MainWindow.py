@@ -42,7 +42,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.setCentralWidget(central)
         self.setGeometry(300, 300, 250, 100)
-        self.setWindowTitle("PC TeleLog")
+        self.setWindowTitle("Droid Navi")
         
         
         self.notifyHandler = NotifyHandler()
@@ -84,7 +84,9 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow,self).closeEvent(event) 
 
 class NotifyHandler:
-    showTime = 5
+    ''' Show the notification for 7 seconds '''
+    SHOW_TIME = 7 
+    
     queue = Queue()
             
     def run(self):
@@ -110,7 +112,7 @@ class NotifyHandler:
         # Display for specified time
         self.splash = splash
         self.splash.show()
-        QtCore.QTimer.singleShot(NotifyHandler.showTime*1000, self.splash.close)
+        QtCore.QTimer.singleShot(NotifyHandler.SHOW_TIME*1000, self.splash.close)
         
     
     def getPixMap(self, event):
