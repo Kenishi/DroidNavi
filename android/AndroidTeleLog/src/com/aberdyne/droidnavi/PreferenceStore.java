@@ -1,4 +1,4 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
 import java.util.ArrayList;
 import java.util.Set;

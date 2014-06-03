@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.aberdyne.androidtelelog.MainActivity"
+            android:name="com.aberdyne.droidnavi.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
                 <data android:mimeType="text/*"/>
             </intent-filter>
         </activity>
-        <service android:name="com.aberdyne.androidtelelog.client.CallMonitorService" android:label="Android TeleLog Call State Listener" android:exported="false" android:isolatedProcess="false" android:stopWithTask="false"></service>
+        <service android:name="com.aberdyne.droidnavi.client.CallMonitorService" android:label="Android TeleLog Call State Listener" android:exported="false" android:isolatedProcess="false" android:stopWithTask="false"></service>
     </application>
 
 </manifest>

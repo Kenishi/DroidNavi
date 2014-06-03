@@ -1,4 +1,4 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
 import android.app.AlertDialog;
 import android.content.Context;

@@ -1,9 +1,9 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
 import java.net.InetAddress;
 
-import com.aberdyne.androidtelelog.client.ServerConnection;
-import com.aberdyne.androidtelelog.client.ServerListManager;
+import com.aberdyne.droidnavi.client.ServerConnection;
+import com.aberdyne.droidnavi.client.ServerListManager;
 
 import android.app.AlertDialog;
 import android.content.Context;

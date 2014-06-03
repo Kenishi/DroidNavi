@@ -1,6 +1,7 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
-import com.aberdyne.androidtelelog.client.ServerListManager;
+import com.aberdyne.androidtelelog.R;
+import com.aberdyne.droidnavi.client.ServerListManager;
 
 import android.content.Intent;
 import android.os.Bundle;

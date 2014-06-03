@@ -6,7 +6,7 @@
     android:columnCount="1" >
     
     <fragment
-        class="com.aberdyne.androidtelelog.PairListFragment"
+        class="com.aberdyne.droidnavi.PairListFragment"
         android:id="@+id/pairListFragment"
         android:layout_row="0"
         android:layout_margin="5dp"

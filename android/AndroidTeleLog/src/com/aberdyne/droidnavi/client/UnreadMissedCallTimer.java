@@ -1,4 +1,4 @@
-package com.aberdyne.androidtelelog.client;
+package com.aberdyne.droidnavi.client;
 
 import java.util.Date;
 import java.util.TimerTask;

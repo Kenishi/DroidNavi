@@ -1,10 +1,10 @@
-package com.aberdyne.androidtelelog.client;
+package com.aberdyne.droidnavi.client;
 
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.aberdyne.androidtelelog.client.ServerListManager.ServerListListener.Action;
+import com.aberdyne.droidnavi.client.ServerListManager.ServerListListener.Action;
 
 import android.content.Context;
 import android.content.SharedPreferences;

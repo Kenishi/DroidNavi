@@ -1,6 +1,6 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
-import com.aberdyne.androidtelelog.PairListFragment.ListItem;
+import com.aberdyne.droidnavi.PairListFragment.ListItem;
 
 public interface ListEditable {
 	public void onAdd(ListItem item);

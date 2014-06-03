@@ -1,4 +1,4 @@
-package com.aberdyne.androidtelelog.client;
+package com.aberdyne.droidnavi.client;
 
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 
-import com.aberdyne.androidtelelog.client.ServerListManager.ServerListListener;
+import com.aberdyne.droidnavi.client.ServerListManager.ServerListListener;
 
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.MissedCallEvent;

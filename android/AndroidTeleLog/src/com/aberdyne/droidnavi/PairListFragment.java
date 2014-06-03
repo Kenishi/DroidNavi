@@ -1,11 +1,11 @@
-package com.aberdyne.androidtelelog;
+package com.aberdyne.droidnavi;
 
 import java.util.Vector;
 
-import com.aberdyne.androidtelelog.client.NonActiveServerConnection;
-import com.aberdyne.androidtelelog.client.ServerConnection;
-import com.aberdyne.androidtelelog.client.ServerListManager;
-import com.aberdyne.androidtelelog.client.ServerListManager.ServerListListener;
+import com.aberdyne.droidnavi.client.NonActiveServerConnection;
+import com.aberdyne.droidnavi.client.ServerConnection;
+import com.aberdyne.droidnavi.client.ServerListManager;
+import com.aberdyne.droidnavi.client.ServerListManager.ServerListListener;
 
 import android.app.AlertDialog;
 import android.content.Context;
