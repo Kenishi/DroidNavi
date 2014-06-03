@@ -16,7 +16,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jackson 1.9.13 LGPL"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/PCTeleLog"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DroidNavi-Server"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/SLF4J for Android 1.6.1 RC1"/>
 	<classpathentry kind="output" path="bin/classes"/>
