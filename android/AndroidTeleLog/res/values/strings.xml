@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AndroidTeleLog</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Droid Navi</string>
     <string-array name="list_contextmenu">
         <item>Manually Input</item>
         <item>Add via QR Reader</item>
     </string-array>
-
 </resources>
