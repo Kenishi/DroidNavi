@@ -25,7 +25,7 @@
   <dependencies>
     <dependency>
       <groupId>droidnavi</groupId>
-      <artifactId>pctelelog-pyqt-ui</artifactId>
+      <artifactId>droidnavi-pyqt-ui</artifactId>
       <version>0.1</version>
 	  <classifier>distribution</classifier>
 	  <type>zip</type>

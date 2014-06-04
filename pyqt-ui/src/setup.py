@@ -40,6 +40,8 @@ qtgui = ".", [pyqt4_site + "QtGui4.dll"]
 dat_files.append(qtcore)
 dat_files.append(qtgui)
     
+# Add README
+dat_files.append((".", ["./README.txt"]))
 
 setup(name = "DroidNavi",
       version = "0.1",

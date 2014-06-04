@@ -11,7 +11,7 @@
   		<directory>${sourceDirectory}</directory>
   		<includes>
   			<include>**/*.py</include>
-			
+			<include>README.txt</include>
   		</includes>
   	</fileSet>
   	<fileSet>

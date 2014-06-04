@@ -7,7 +7,7 @@
   	<version>0.1</version>
   </parent>
   
-  <artifactId>pctelelog-pyqt-ui</artifactId>	
+  <artifactId>droidnavi-pyqt-ui</artifactId>	
   <name>DroidNavi-UI</name>
   <description>The python UI for working with the server and managing events.</description>
   <packaging>pom</packaging>
@@ -22,7 +22,7 @@
   	</dependency>
   	<dependency>
   		<groupId>droidnavi</groupId>
-  		<artifactId>pctelelog-gateway-server</artifactId>
+  		<artifactId>droidnavi-gateway-server</artifactId>
 		<version>0.1</version>
   	</dependency>
   </dependencies>

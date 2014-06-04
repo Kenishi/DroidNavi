@@ -23,9 +23,9 @@ class POpenLauncher:
         app = QtGui.QApplication(sys.argv)
         
         # Look for the gateway server
-        jar_file = glob.glob('../lib/pctelelog-gateway-server*')
+        jar_file = glob.glob('../lib/droidnavi-gateway-server*')
         if len(jar_file) == 0:
-            jar_file = glob.glob('./lib/pctelelog-gateway-server*')
+            jar_file = glob.glob('./lib/droidnavi-gateway-server*')
         if len(jar_file) == 0:
             info = QtGui.QMessageBox()
             info.setText("pctelelog-gateway-server JAR could not be found. Please make sure the JAR is in the 'lib' folder. Exiting")

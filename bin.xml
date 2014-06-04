@@ -12,14 +12,14 @@
             <outputDirectory>/</outputDirectory>
             <unpack>true</unpack>
             <includes>
-                <include>droidnavi:pctelelog-pyqt-ui</include>
+                <include>droidnavi:droidnavi-pyqt-ui</include>
             </includes>
         </dependencySet>
         <dependencySet>
             <outputDirectory>/lib</outputDirectory>
             <unpack>false</unpack>
             <excludes>
-                <exclude>droidnavi:pctelelog-pyqt-ui</exclude>
+                <exclude>droidnavi:droidnavi-pyqt-ui</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
@@ -27,7 +27,7 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>droidnavi:pctelelog-pyqt-ui</include>
+				<include>droidnavi:droidnavi-pyqt-ui</include>
 			</includes>
 			<binaries>
 				<includeDependencies>true</includeDependencies>
