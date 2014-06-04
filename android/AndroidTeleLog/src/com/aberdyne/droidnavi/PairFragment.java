@@ -1,6 +1,6 @@
 package com.aberdyne.droidnavi;
 
-import com.aberdyne.androidtelelog.R;
+import com.aberdyne.droidnavi.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

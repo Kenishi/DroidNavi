@@ -17,8 +17,8 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DroidNavi-Server"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="ext_libs/jackson-core-lgpl-1.9.13.jar"/>
-	<classpathentry kind="lib" path="ext_libs/jackson-mapper-lgpl-1.9.13.jar"/>
-	<classpathentry kind="lib" path="ext_libs/slf4j-android-1.6.1-RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext_libs/slf4j-android-1.6.1-RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext_libs/jackson-core-lgpl-1.9.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext_libs/jackson-mapper-lgpl-1.9.13.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

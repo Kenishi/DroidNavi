@@ -1,6 +1,6 @@
 package com.aberdyne.droidnavi;
 
-import com.aberdyne.androidtelelog.R;
+import com.aberdyne.droidnavi.R;
 import com.aberdyne.droidnavi.client.CallMonitorService;
 
 import android.content.Context;
