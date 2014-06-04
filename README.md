@@ -7,6 +7,21 @@ Receive alerts on your computer when your Android phone rings or you miss a call
 ### What's with the name?
 Droid should be obvious. 'Navi' however does not mean *Navi* gation. Navi comes from the [annoying] fairy in Zelda: Ocarina of Time, who would draw your attention to important things.
 
+### Permissions Explanation
+The Android app requires a number of permissions.
+* *read phone status and identity* & *reroute outgoing calls* 
+  
+  This permission is required in order for the app to be able to know when a phone call occurs. In addition it allows the app to gather information such as the phone number of the caller. 
+* *read call log*
+  
+  Required in order to check whether there has been any missed calls.
+* *read your contacts*
+  
+  Required in order to pair contact information with the phone number of a caller, so it can be sent to the desktop server.
+* *full network access*
+  
+  Required so the app can connect to the desktop server and send information.
+
 ### What stuff do you use?
 * [Py4j - A Python to Java communication library](http://py4j.sourceforge.net/)
 * PyQt - For the UI
