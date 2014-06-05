@@ -33,7 +33,7 @@ The Android app requires a number of permissions.
 I use Eclipse extensively and have included the project files in each subfolder for each part.
 The Python UI (pyqt-ui) also has the pydev project files as well if you have that installed for Eclipse.
 
-While the Java server and UI use Maven to manage dependencies at the moment. I have not setup the Android side to use maven yet. The main reason being that I use Eclipse for my development and currently (as far as I know) M2Eclipse, Eclipse's built in Maven plugin, does not play well with doing Android builds inside the environment. What this means is you will need to make sure the library dependencies are on your build path when you create the APK or build/run in the IDE. I've included the copy of the libraries I have been using in the android/lib on the repository.
+While the Java server and UI use Maven to manage dependencies at the moment. I have not setup the Android side to use maven yet. The main reason being that I use Eclipse for my development and currently (as far as I know) M2Eclipse, Eclipse's built in Maven plugin, does not play well with doing Android builds inside the environment. What this means is you will need to make sure the library dependencies are on your build path when you create the APK or build/run in the IDE. I've included the copy of the libraries I have been using in the 'ext_libs' directory in the Android project folder.
 
 For all intents and purposes, I will have these assumptions:
 
