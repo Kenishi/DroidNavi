@@ -1,4 +1,5 @@
-#DroidNavi
+
+# ![Droid Navi](/logo.png)DroidNavi
 ##'Hey Listen!'
 
 ### What does it do?
