@@ -7,7 +7,7 @@
   	<version>0.1</version>
   </parent>
   
-  <artifactId>pctelelog-gateway-server</artifactId>
+  <artifactId>droidnavi-gateway-server</artifactId>
   <name>DroidNavi-Server</name>
   <packaging>jar</packaging>
   
