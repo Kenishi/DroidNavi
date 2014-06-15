@@ -3,6 +3,9 @@ package com.aberdyne.droidnavi;
 import com.aberdyne.droidnavi.R;
 import com.aberdyne.droidnavi.client.ServerListManager;
 
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +33,41 @@ public class MainActivity extends FragmentActivity {
 		}
 		
 		UiAdapter adapter = new UiAdapter(getSupportFragmentManager());
-		ViewPager pager = (ViewPager)findViewById(R.id.viewPager);
+		final ViewPager pager = (ViewPager)findViewById(R.id.viewPager);
+		
+		// Register Tab bar and listeners
+		final ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+			
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			}
+			
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				
+				pager.setCurrentItem(tab.getPosition());
+				
+			}
+			
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			}
+		};
+		
+		for(Pages page: Pages.values()) {
+			actionBar.addTab(actionBar.newTab()
+					.setText(page.getName())
+					.setTabListener(tabListener));
+		}
+		
+		// Make selected tab change with swipes
+		pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				getActionBar().setSelectedNavigationItem(position);
+			}
+		});
+		
 		pager.setAdapter(adapter);
 		
 		ServerListManager.init(this);
@@ -68,22 +105,32 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public enum Pages {
-		STATUS_PAGE(0),
-		PAIR_PAGE(1);
+		STATUS_PAGE(0, "Status"),
+		PAIR_PAGE(1, "Pair");
 		
-		private int page_num;
+		private int m_page_num;
+		private String m_page_name;
 		
 		static public Pages getPage(int n) {
 			Pages[] pages = Pages.values();
 			for(Pages page : pages) {
-				if(page.page_num == n)
+				if(page.m_page_num == n)
 					return page;
 			}
 			return null;
 		}
 		
-		private Pages(int n) {
-			page_num = n;
+		public String getName() {
+			return m_page_name;
+		}
+		
+		public int getNum() {
+			return m_page_num;
+		}
+		
+		private Pages(int page_num, String page_name) {
+			m_page_num = page_num;
+			m_page_name = page_name;
 		}
 		
 	}
