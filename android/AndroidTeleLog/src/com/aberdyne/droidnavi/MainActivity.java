@@ -91,6 +91,8 @@ public class MainActivity extends FragmentActivity {
 				return new StatusFragment();
 			case PAIR_PAGE:
 				return new PairFragment();
+			case ABOUT_PAGE:
+				return new AboutFragment();
 			}
 			
 			return null;
@@ -106,7 +108,8 @@ public class MainActivity extends FragmentActivity {
 	
 	public enum Pages {
 		STATUS_PAGE(0, "Status"),
-		PAIR_PAGE(1, "Pair");
+		PAIR_PAGE(1, "Pair"),
+		ABOUT_PAGE(2, "About");
 		
 		private int m_page_num;
 		private String m_page_name;
