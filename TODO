@@ -1,7 +1,7 @@
 List of things that still need done for the DroidNavi.
 
 
-* Add an About screen in both the PC UI and Android.
+* Add an About screen in both the PC UI
 	* Include License references in the About
 * Add a "Starting server.." dialog when launching. Will have to rework how MainWindow works.
 	
