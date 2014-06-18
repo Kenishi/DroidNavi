@@ -8,6 +8,7 @@ import com.aberdyne.droidnavi.client.ServerListManager;
 import com.aberdyne.droidnavi.client.ServerListManager.ServerListListener;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -86,6 +87,23 @@ public class PairListFragment extends ListFragment {
 			ServerListManager.getSync(context);
 		}
 		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView view = (TextView)super.getView(position, convertView, parent); 
+			ListItem item = items.get(position);
+			
+			if(item != ListItem.PAIR_ITEM) {
+				int color = item.isConnected() ? 
+						Color.parseColor("#669900") : Color.parseColor("#CC0000");
+				view.setTextColor(color);
+			}
+			else {
+				view.setTextColor(Color.BLACK);
+			}
+			
+			return view;
+		}
+		
 		public void onServerListChange(Action action, ServerConnection server) {
 			ListItem newItem = ListItem.createItem(server);
 			switch(action) {
@@ -119,12 +137,14 @@ public class PairListFragment extends ListFragment {
 	}
 	
 	public static class ListItem {
-		public static final ListItem PAIR_ITEM = new ListItem("Pair with new PC...");
+		public static final ListItem PAIR_ITEM = new ListItem("Pair with new PC...", false);
 		
 		private String m_text = null;
+		private boolean m_isConnected = false;
 		
-		private ListItem(String text) {
+		private ListItem(String text, boolean isConnected) {
 			m_text = text;
+			m_isConnected = isConnected;
 		}
 		
 		/**
@@ -136,8 +156,12 @@ public class PairListFragment extends ListFragment {
 			if(server == null) {
 				throw new NullPointerException("Create List Item: Inet was null.");
 			}
-			
-			return new ListItem(server.toString());
+			ListItem item = new ListItem(server.toString(), server.isConnected()); 
+			return item;
+		}
+		
+		public boolean isConnected() {
+			return m_isConnected;
 		}
 		
 		@Override

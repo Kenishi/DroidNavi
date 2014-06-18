@@ -188,6 +188,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 			server.shutdown(true); // Shutdown and send ShutdownEvent
 			removeConnectedServer(server);
 			addStandByServer(server);
+			ServerListManager.updateServer(m_context, server);
 		}
 		logger.trace("ENTRY EventDispatchThread.setAllToStandby");
 	}
