@@ -1,6 +1,7 @@
 package com.aberdyne.droidnavi.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -62,6 +63,22 @@ public class ServerConnection implements Comparable<String> {
 	 */
 	public ServerConnection(String ip) throws ServerConnectionException {
 		this(ip, true);
+	}
+	
+	/**
+	 * Helper function to validate a host/ip is valid.
+	 * 
+	 * @param host A string containing a hostname or IP to check.
+	 * @return True if the host string is valid. False if it is not.
+	 */
+	static public boolean validateHost(String host) {
+		try {
+			InetAddress.getByName(host);
+		}
+		catch(Exception e) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**
