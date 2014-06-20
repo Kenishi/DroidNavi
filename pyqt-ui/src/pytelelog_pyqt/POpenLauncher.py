@@ -11,6 +11,7 @@ from PyQt4 import QtGui
 from py4j.java_gateway import JavaGateway
 from MainWindow import MainWindow
 import subprocess
+from pytelelog_pyqt.components.ProgressLoader import ProgressLoader
 
 class POpenLauncher:
     '''
@@ -21,6 +22,10 @@ class POpenLauncher:
     def __init__(self):
         # Start QT
         app = QtGui.QApplication(sys.argv)
+        
+        # Show Starting Server dialog
+        loadingDialog = ProgressLoader()
+        loadingDialog.show()
         
         # Look for the gateway server
         jar_file = glob.glob('../lib/droidnavi-gateway-server*')
@@ -57,12 +62,11 @@ class POpenLauncher:
                     time.sleep(3)
             # Exit if we got no connection
             if not self.__gateway:
-                info = QtGui.QMessageBox()
-                info.setText("DroidNavi server failed to start. Exiting")
-                info.exec_()
                 serverProc.kill()
+                loadingDialog.error()
                 sys.exit(1)
-                    
+            
+            loadingDialog.finish()
             mainWindow = MainWindow(self.__gateway)
             
             result = app.exec_()
