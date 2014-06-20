@@ -8,6 +8,7 @@ from Queue import Queue
 
 from PyQt4 import QtGui, QtCore
 from components.NotifyWidget import NotifyWidget
+from components.PairingDialog import PairingDialog
 from EventCallback import EventListener
 from pytelelog_pyqt.EventType import EventType
 
@@ -34,9 +35,18 @@ class MainWindow(QtGui.QMainWindow):
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
         
-        self.editArea = QtGui.QTextEdit(central)
-        self.setEnabled(False)
-        grid.addWidget(self.editArea, 0,0,1,1)
+        # Connected List
+        connectLabel = QtGui.QLabel("Connected Devices:")
+        grid.addWidget(connectLabel, 0, 0)
+        
+        self.connectList = ConnectList()
+        grid.addWidget(self.connectList, 1, 0, 2, 1)
+        
+        # Pairing Helper Button
+        pairHelper = QtGui.QPushButton()
+        pairHelper.setText("Pair")
+        pairHelper.clicked.connect(self.loadPairing)
+        grid.addWidget(pairHelper, 4, 0)
         
         central.setLayout(grid)
         
@@ -56,6 +66,11 @@ class MainWindow(QtGui.QMainWindow):
         self.callback.onEvent = self.onEvent
         self.__gateway.entry_point.addEventListener(self.callback)
     
+    def loadPairing(self):
+        pairingDialog = PairingDialog(self)
+        pairingDialog.exec_()
+        pass
+    
     def initEventType(self):
         self.EventType = EventType(self.__gateway)
     
@@ -73,6 +88,19 @@ class MainWindow(QtGui.QMainWindow):
         
     def handleEvent(self, event):
         print "Event: " + event.toString()
+        
+        # Add/Remove on [Diss]Connect events
+        if event.getEventType() == event.EventType.CLIENT_CONNECT:
+            device = event.getDevice()
+            if device:
+                self.connectList.addDevice(device)
+            pass
+        elif event.getEventType() == event.EventType.SHUTDOWN:
+            device = event.getDevice()
+            if device:
+                self.connectList.removeDevice(device) 
+            pass
+        
         # (Impl later) Check pref if should handle event
         # (Impl later) Get notify prefs
         # Create notify widget if applicable
@@ -82,6 +110,31 @@ class MainWindow(QtGui.QMainWindow):
     def closeEvent(self, event):
         self.shutdownGateway()  
         super(MainWindow,self).closeEvent(event) 
+
+class ConnectList(QtGui.QListWidget):
+    connectedDict = []
+    
+    def __init__(self):
+        super(ConnectList, self).__init__()
+        
+    def addDevice(self, device):
+        ip = device.getIP()
+        if ip:
+            ip_str = ip.toString()
+            if ip_str and (ip_str not in self.connectedDict):
+                self.connectedDict.append(ip_str)
+                self.addItem(ip_str)
+    
+    def removeDevice(self, device):
+        ip = device.getIP()
+        if ip:
+            ip_str = ip.toString()
+            if ip_str and (ip_str in self.connectedDict):
+                loc = self.connectedDict.index(ip_str)
+                self.connectedDict.remove(ip_str)
+                self.takeItem(loc)
+                
+            
 
 class NotifyHandler:
     ''' Show the notification for 7 seconds '''
