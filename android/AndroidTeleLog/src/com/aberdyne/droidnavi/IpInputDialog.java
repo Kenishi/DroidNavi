@@ -1,7 +1,5 @@
 package com.aberdyne.droidnavi;
 
-import java.net.InetAddress;
-
 import com.aberdyne.droidnavi.client.ServerConnection;
 import com.aberdyne.droidnavi.client.ServerListManager;
 
