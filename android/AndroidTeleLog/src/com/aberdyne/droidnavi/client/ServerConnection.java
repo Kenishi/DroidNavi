@@ -261,6 +261,11 @@ public class ServerConnection implements Comparable<String> {
 	 */
 	private boolean openSocket(int port) {
 		logger.trace("ENTRY ServerConnection.openSocket({})", port);
+		
+		if(m_server != null) {
+			shutdown(true);
+		}
+		
 		m_server = createSocket(m_ipStr, port);
 		if(m_server == null) {
 			setStandbyStatus(true);
