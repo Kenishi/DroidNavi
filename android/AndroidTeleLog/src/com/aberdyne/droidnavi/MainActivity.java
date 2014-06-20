@@ -1,7 +1,10 @@
 package com.aberdyne.droidnavi;
 
 import com.aberdyne.droidnavi.R;
+import com.aberdyne.droidnavi.client.ServerConnection;
 import com.aberdyne.droidnavi.client.ServerListManager;
+import com.aberdyne.droidnavi.zxing.IntentIntegrator;
+import com.aberdyne.droidnavi.zxing.IntentResult;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -13,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 	public  final String PREF_SERVER_LIST = "serverList";
@@ -28,7 +32,8 @@ public class MainActivity extends FragmentActivity {
 		String type = intent.getType();
 		if(Intent.ACTION_SEND.equals(action)) {
 			if("text/plain".equals(type)) {
-				
+				String data = intent.getDataString();
+				System.out.println(data);
 			}
 		}
 		
@@ -71,6 +76,19 @@ public class MainActivity extends FragmentActivity {
 		pager.setAdapter(adapter);
 		
 		ServerListManager.init(this);
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		IntentResult scanResult = 
+				IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		if(scanResult != null) {
+			String ip = scanResult.getContents();
+			ServerListManager.addServer(this, new ServerConnection(ip));
+			Toast.makeText(this, "IP added via QRCode", Toast.LENGTH_SHORT).show();
+		}
+		else {
+			Toast.makeText(this, "Failed to add IP via QRCode", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public PreferenceStore getPreferenceStore() {

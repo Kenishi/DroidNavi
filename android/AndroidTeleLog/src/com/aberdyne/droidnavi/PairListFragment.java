@@ -6,7 +6,9 @@ import com.aberdyne.droidnavi.client.NonActiveServerConnection;
 import com.aberdyne.droidnavi.client.ServerConnection;
 import com.aberdyne.droidnavi.client.ServerListManager;
 import com.aberdyne.droidnavi.client.ServerListManager.ServerListListener;
+import com.aberdyne.droidnavi.zxing.IntentIntegrator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,6 +26,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class PairListFragment extends ListFragment {
+	public Activity act;
+	
+	public PairListFragment() {
+		super();
+		act = this.getActivity();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -255,7 +264,8 @@ public class PairListFragment extends ListFragment {
 				IpInputDialog.showDialog(parent);
 				break;
 			case QRCODE:
-				QRCodeDialog.showDialog(parent);
+				IntentIntegrator integrator = new IntentIntegrator((Activity)parent);
+				integrator.initiateScan();
 				break;
 			case REMOVE:
 				AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
