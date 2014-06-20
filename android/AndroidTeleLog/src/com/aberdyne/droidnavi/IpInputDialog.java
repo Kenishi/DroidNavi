@@ -37,7 +37,7 @@ public class IpInputDialog {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				String ip = input.getText().toString();
-				if(validate(ip)) {
+				if(ServerConnection.validateHost(ip)) {
 					ServerListManager.addServer(parent, new ServerConnection(ip));
 				}
 			}
@@ -47,21 +47,5 @@ public class IpInputDialog {
 			public void onClick(DialogInterface dialog, int which) {}
 		});
 		builder.show();
-	}
-	
-	/** 
-	 * Validate that string is a proper IPv4 address
-	 * @param ip A string that should contain an IPv4 string address
-	 * @return True if the string is valid. False if it is not.
-	 */
-	static private boolean validate(String ip) {
-		// Use InetAddress to validate the string
-		try {
-			InetAddress.getByName(ip);
-		}
-		catch(Exception e) {
-			return false;
-		}
-		return true;
 	}
 }
