@@ -78,13 +78,21 @@ public class MainActivity extends FragmentActivity {
 		ServerListManager.init(this);
 	}
 	
+	/**
+	 * Called when Barcode Scanner completes scanning. Adds IP to pairing.
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		IntentResult scanResult = 
 				IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if(scanResult != null) {
 			String ip = scanResult.getContents();
-			ServerListManager.addServer(this, new ServerConnection(ip));
-			Toast.makeText(this, "IP added via QRCode", Toast.LENGTH_SHORT).show();
+			if(ServerConnection.validateHost(ip)) {
+				ServerListManager.addServer(this, new ServerConnection(ip));
+				Toast.makeText(this, "IP added via QRCode", Toast.LENGTH_SHORT).show();
+			}
+			else {
+				Toast.makeText(this, "Invalid host or IP supplied", Toast.LENGTH_LONG).show();
+			}
 		}
 		else {
 			Toast.makeText(this, "Failed to add IP via QRCode", Toast.LENGTH_SHORT).show();
