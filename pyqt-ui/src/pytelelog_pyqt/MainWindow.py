@@ -10,8 +10,9 @@ from PyQt4 import QtGui, QtCore
 from components.NotifyWidget import NotifyWidget
 from components.PairingDialog import PairingDialog
 from EventCallback import EventListener
-from pytelelog_pyqt.EventType import EventType
-
+from EventType import EventType
+from components.settings import SettingsDialog
+from components.about import AboutDialog
 
 class MainWindow(QtGui.QMainWindow):
     
@@ -34,6 +35,10 @@ class MainWindow(QtGui.QMainWindow):
         
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
+        
+        # Menubar
+        menuBar = self.createAppMenuBar()
+        self.setMenuBar(menuBar)
         
         # Connected List
         connectLabel = QtGui.QLabel("Connected Devices:")
@@ -58,6 +63,30 @@ class MainWindow(QtGui.QMainWindow):
         self.notifyHandler = NotifyHandler()
         self.show()
     
+    def createAppMenuBar(self):
+        menuBar = self.menuBar()
+        fileMenu = menuBar.addMenu("&File")
+        
+        settingsAction = QtGui.QAction("&Options", self)
+        settingsAction.setToolTip('Open program options')
+        settingsAction.triggered.connect(self.openSettings)
+        fileMenu.addAction(settingsAction)
+        
+        quitAction = QtGui.QAction("&Quit", self)
+        quitAction.setToolTip("Quit program")
+        quitAction.triggered.connect(self.closeEvent)
+        fileMenu.addAction(quitAction)
+        
+        helpMenu = menuBar.addMenu("&Help")
+        
+        aboutActions = QtGui.QAction("&About", self)
+        aboutActions.setToolTip("Show About dialog")
+        aboutActions.triggered.connect(self.openAbout)
+        helpMenu.addAction(aboutActions)
+        
+        return menuBar
+        
+    
     def initCallback(self, func):
         # Hookup Signal
         self.receiveEvent.connect(self.handleEvent)
@@ -65,6 +94,15 @@ class MainWindow(QtGui.QMainWindow):
         self.callback = EventListener()
         self.callback.onEvent = self.onEvent
         self.__gateway.entry_point.addEventListener(self.callback)
+    
+    def openAbout(self):
+        aboutDialog = AboutDialog()
+        aboutDialog.exec_()
+    
+    def openSettings(self):
+        settingsDialog = SettingsDialog()
+        settingsDialog.exec_()
+        pass
     
     def loadPairing(self):
         pairingDialog = PairingDialog(self)

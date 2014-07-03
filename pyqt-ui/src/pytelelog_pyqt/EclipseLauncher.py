@@ -15,6 +15,8 @@ class Launcher:
         self.__gateway = JavaGateway(start_callback_server=True)
         
         app = QtGui.QApplication(sys.argv)
+        app.setApplicationName("Droid Navi")
+        app.setApplicationVersion("0.1")
         mainWindow = MainWindow(self.__gateway)
         sys.exit(app.exec_())
        

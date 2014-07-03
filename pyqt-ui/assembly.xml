@@ -6,6 +6,13 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
+    <fileSet>
+        <outputDirectory>./</outputDirectory>
+        <directory>${project.build.directory}/res</directory>
+        <includes>
+            <include>logo.png</include>
+        </includes>
+    </fileSet>
   	<fileSet>
   		<outputDirectory>./</outputDirectory>
   		<directory>${sourceDirectory}</directory>

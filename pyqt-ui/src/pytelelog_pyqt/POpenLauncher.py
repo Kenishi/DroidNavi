@@ -22,6 +22,7 @@ class POpenLauncher:
     def __init__(self):
         # Start QT
         app = QtGui.QApplication(sys.argv)
+        app.setApplicationName("Droid Navi")
         
         # Show Starting Server dialog
         loadingDialog = ProgressLoader()
