@@ -120,6 +120,12 @@ public class Client extends Thread {
 	 */
 	public void shutdown() {
 		isShutdown = true;
+		if(m_client != null) {
+			try {
+				m_client.close();
+			} catch (IOException e) {
+			}
+		}
 		interrupt();
 	}
 	
