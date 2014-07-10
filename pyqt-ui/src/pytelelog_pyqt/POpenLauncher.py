@@ -4,6 +4,7 @@ Created on May 18, 2014
 @author: Kei
 '''
 import sys
+import os
 import glob
 import time
 
@@ -40,17 +41,20 @@ class POpenLauncher:
         ## Start Server as Subprocess
         command = ["java", "-jar", jar_file[0]]
         
-        # Set process to have no window
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        if os.name == "nt":
+            # Set process to have no window
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         
-        serverProc = subprocess.Popen(args=command, startupinfo=startupinfo)
+            self.serverProc = subprocess.Popen(args=command, startupinfo=startupinfo)
+        else:
+            self.serverProc = subprocess.Popen(args=command)
         
-        if(serverProc != None):
+        if(self.serverProc != None):
             time.sleep(1) # Give the server time to start up
             
             '''Attempt to setup connection to gateway'''
-            attempt_count = 0 #
+            attempt_count = 0
             self.__gateway = None
             while not self.__gateway:
                 try:
@@ -63,17 +67,23 @@ class POpenLauncher:
                     time.sleep(3)
             # Exit if we got no connection
             if not self.__gateway:
-                serverProc.kill()
+                self.serverProc.kill()
                 loadingDialog.error()
                 sys.exit(1)
             
             loadingDialog.finish()
             mainWindow = MainWindow(self.__gateway)
             
+            app.aboutToQuit.connect(self.exitHandler)
             result = app.exec_()
-            serverProc.kill()
+            print "Exit"
+            self.serverProc.kill()
+            self.serverProc.wait()
             sys.exit(result)
-            
+    
+    def exitHandler(self):
+        print "About to exit"
+        self.__gateway.shutdown(True)
        
 if __name__ == '__main__':
     POpenLauncher()

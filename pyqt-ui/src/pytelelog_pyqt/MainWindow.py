@@ -32,6 +32,10 @@ class MainWindow(QtGui.QMainWindow):
         self.initEventType()
         
     def initUI(self):
+        '''
+        Init main window UI
+        
+        '''
         
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
@@ -64,6 +68,11 @@ class MainWindow(QtGui.QMainWindow):
         self.show()
     
     def createAppMenuBar(self):
+        '''
+        Build the main window's Menu bar and return it
+        
+        '''
+        
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu("&File")
         
@@ -88,6 +97,11 @@ class MainWindow(QtGui.QMainWindow):
         
     
     def initCallback(self, func):
+        '''
+        Setup the callback with the Java side
+        
+        '''
+        
         # Hookup Signal
         self.receiveEvent.connect(self.handleEvent)
         
@@ -96,25 +110,46 @@ class MainWindow(QtGui.QMainWindow):
         self.__gateway.entry_point.addEventListener(self.callback)
     
     def openAbout(self):
+        '''
+        Show the About dialog
+        
+        '''
+        
         aboutDialog = AboutDialog()
         aboutDialog.exec_()
     
     def openSettings(self):
+        '''
+        Show the Settings Dialog
+        
+        '''
+        
         settingsDialog = SettingsDialog()
         settingsDialog.exec_()
         pass
     
     def loadPairing(self):
+        '''
+        Show the pairing helper dialog
+        
+        '''
+        
         pairingDialog = PairingDialog(self)
         pairingDialog.exec_()
         pass
     
     def initEventType(self):
+        '''
+        Setup a mock Enum style EventType for this instance.
+        
+        This is needed for interpreting events received from the Java server.
+        
+        '''
+        
         self.EventType = EventType(self.__gateway)
     
     def shutdownGateway(self):
         self.__gateway.entry_point.removeEventListener(self.callback)
-        self.__gateway.shutdown()
     
     def displayEvent(self, event):
         self.editArea.append(event.toString())
@@ -146,8 +181,16 @@ class MainWindow(QtGui.QMainWindow):
         #widget = NotifyWidget.createInstance(event)
         
     def closeEvent(self, event):
-        self.shutdownGateway()  
-        super(MainWindow,self).closeEvent(event) 
+        self.shutdownGateway()
+        self.deleteLater()
+        
+    @staticmethod    
+    def debug_trace():
+        '''Set a tracepoint in the Python debugger that works with Qt'''
+        from PyQt4.QtCore import pyqtRemoveInputHook
+        from pdb import set_trace
+        pyqtRemoveInputHook()
+        set_trace()   
 
 class ConnectList(QtGui.QListWidget):
     connectedDict = []
