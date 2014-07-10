@@ -8,9 +8,9 @@
   <fileSets>
     <fileSet>
         <outputDirectory>./</outputDirectory>
-        <directory>${project.build.directory}/res</directory>
+        <directory>${resourceDirectory}</directory>
         <includes>
-            <include>logo.png</include>
+            <include>*.png</include>
         </includes>
     </fileSet>
   	<fileSet>

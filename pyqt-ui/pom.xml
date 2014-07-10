@@ -13,6 +13,7 @@
   <packaging>pom</packaging>
   <properties>
   	<sourceDirectory>./src</sourceDirectory>
+  	<resourceDirectory>./res</resourceDirectory>
   </properties>
   <dependencies>
   	<dependency>
@@ -29,6 +30,12 @@
   
   <build>
   	<resources>
+  	    <resource>
+  	        <directory>res</directory>
+  	        <includes>
+  	            <include>*.png</include>
+  	        </includes>
+  	    </resource>
   		<resource>
   			<directory>src/*</directory>
   			<includes>
@@ -36,7 +43,7 @@
   			</includes>
   		</resource>
   	</resources>
-  	<outputDirectory>bin</outputDirectory>
+  	<outputDirectory>./bin</outputDirectory>
   	<plugins>
   		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
@@ -62,9 +69,6 @@
   				<descriptors>
   					<descriptor>./assembly.xml</descriptor>
   				</descriptors>
-<!--   				<descriptorRefs>
-  					<descriptiorRef>bin</descriptiorRef>
-  				</descriptorRefs> -->
   			</configuration>
   		</plugin>
   	</plugins>

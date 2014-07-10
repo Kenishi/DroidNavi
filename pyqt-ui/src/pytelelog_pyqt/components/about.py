@@ -3,7 +3,7 @@ Created on Jun 29, 2014
 
 @author: Kei
 '''
-
+import glob
 from PyQt4 import QtGui
 
 class AboutDialog(QtGui.QDialog):
@@ -18,7 +18,15 @@ class AboutDialog(QtGui.QDialog):
         
         layout = QtGui.QVBoxLayout()
         
-        img = QtGui.QPixmap("logo.png")
+        logoFile = None
+        if glob.glob("../logo.png"):
+            logoFile = "../logo.png"
+        elif glob.glob("./logo.png"):
+            logoFile = "./logo.png"
+
+        if logoFile:            
+            img = QtGui.QPixmap(logoFile)
+            
         logoLabel = QtGui.QLabel()
         logoLabel.setPixmap(img)
         layout.addWidget(logoLabel)
