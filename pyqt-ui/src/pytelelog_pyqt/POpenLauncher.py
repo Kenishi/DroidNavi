@@ -64,7 +64,7 @@ class POpenLauncher:
             # Exit if we got no connection
             if not self.__gateway:
                 self.serverProc.kill()
-                QtGui.QMessageBox.critical(None, "Failed to start Java server.", "Error")
+                QtGui.QMessageBox.critical(None, "Error", "Failed to start Java server.")
                 sys.exit(1)
             
             #loadingDialog.finish()
