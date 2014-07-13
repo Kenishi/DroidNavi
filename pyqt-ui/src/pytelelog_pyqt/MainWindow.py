@@ -1,7 +1,7 @@
 '''
 Created on May 6, 2014
 
-@author: Kei
+@author: Jeremy May
 '''
 
 from Queue import Queue

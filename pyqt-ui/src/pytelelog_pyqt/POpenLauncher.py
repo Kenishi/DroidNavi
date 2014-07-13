@@ -1,7 +1,7 @@
 '''
 Created on May 18, 2014
 
-@author: Kei
+@author: Jeremy May
 '''
 import sys
 import os

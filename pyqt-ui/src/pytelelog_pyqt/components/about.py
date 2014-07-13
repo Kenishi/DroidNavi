@@ -1,7 +1,7 @@
 '''
 Created on Jun 29, 2014
 
-@author: Kei
+@author: Jeremy May
 '''
 import glob
 from PyQt4 import QtGui

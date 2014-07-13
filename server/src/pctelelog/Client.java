@@ -23,7 +23,7 @@ import pctelelog.internal.events.ClientSocketClosedEvent;
 /**
  * A class representing the connection to a Client device
  *  
- * @author Kei
+ * @author Jeremy May
  *
  */
 
