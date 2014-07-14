@@ -41,6 +41,9 @@ class MainWindow(QtGui.QMainWindow):
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
         
+        self.tray = QtGui.QSystemTrayIcon(AppIcon())
+        self.tray.setVisible(False)
+        
         # Set App Icon
         self.initIcon()
         
@@ -186,6 +189,21 @@ class MainWindow(QtGui.QMainWindow):
         # Create notify widget if applicable
         self.notifyHandler.handleEvent(event)
         #widget = NotifyWidget.createInstance(event)
+    
+    def changeEvent(self, event):
+        if type(event) is QtCore.QEvent.WindowStateChange:
+            if self.isMinimized():
+                self.minimizeToTray()
+                event.ignore()
+    
+    def maximizeFromTray(self):
+        self.setVisible(True)
+        self.show()
+    
+    def minimizeToTray(self):
+        self.hide()
+        self.setVisible(False)
+        self.tray.display(True)
         
     def closeEvent(self, event):
         self.shutdownGateway()
