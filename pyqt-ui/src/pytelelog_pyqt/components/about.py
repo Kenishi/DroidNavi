@@ -36,7 +36,7 @@ class AboutDialog(QtGui.QDialog):
                     "Licensed under LGPL v2.0\n" +
                     "\n" +
                     "Libraries in use: \n" +
-                    "Jacson JSON Processor 1.9.13\n" +
+                    "Jackson JSON Processor 1.9.13\n" +
                     "Py4j 0.8.1\n" +
                     "Log4j2 2.0 RC1")
         aboutText = QtGui.QLabel(aboutStr)

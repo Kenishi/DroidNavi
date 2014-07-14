@@ -11,11 +11,11 @@ from PyQt4 import QtGui
 class AppIcon(QtGui.QIcon):
 
     def __init__(self):
-        f = glob.glob('./droidnavi.ico')
+        f = glob.glob('./logo.png')[0]
         if f:
             super(AppIcon, self).__init__(f)
             return
-        f = glob.glob('../droidnavi.ico')
+        f = glob.glob('../logo.png')[0]
         if f:
             super(AppIcon, self).__init__(f)
             return
