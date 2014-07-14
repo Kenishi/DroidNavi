@@ -9,10 +9,11 @@ from Queue import Queue
 from PyQt4 import QtGui, QtCore
 from components.NotifyWidget import NotifyWidget
 from components.PairingDialog import PairingDialog
-from EventCallback import EventListener
-from EventType import EventType
 from components.settings import SettingsDialog
 from components.about import AboutDialog
+from components.AppIcon import AppIcon
+from EventCallback import EventListener
+from EventType import EventType
 
 class MainWindow(QtGui.QMainWindow):
     
@@ -39,6 +40,9 @@ class MainWindow(QtGui.QMainWindow):
         
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
+        
+        # Set App Icon
+        self.initIcon()
         
         # Menubar
         menuBar = self.createAppMenuBar()
@@ -108,6 +112,9 @@ class MainWindow(QtGui.QMainWindow):
         self.callback = EventListener()
         self.callback.onEvent = self.onEvent
         self.__gateway.entry_point.addEventListener(self.callback)
+    
+    def initIcon(self):
+        self.setWindowIcon(AppIcon())
     
     def openAbout(self):
         '''
