@@ -5,13 +5,15 @@ Created on May 6, 2014
 '''
 
 from Queue import Queue
+from functools import partial
 
 from PyQt4 import QtGui, QtCore
 from components.NotifyWidget import NotifyWidget
 from components.PairingDialog import PairingDialog
-from components.settings import SettingsDialog
+from components.settings import SettingsDialog, SettingsData
 from components.about import AboutDialog
 from components.AppIcon import AppIcon
+from components.tray import Tray
 from EventCallback import EventListener
 from EventType import EventType
 
@@ -41,8 +43,9 @@ class MainWindow(QtGui.QMainWindow):
         central = QtGui.QWidget(self)
         grid = QtGui.QGridLayout(central)
         
-        self.tray = QtGui.QSystemTrayIcon(AppIcon())
-        self.tray.setVisible(False)
+        # Setup System Tray Icon
+        self.tray = Tray(self)
+        self.tray.display(False)
         
         # Set App Icon
         self.initIcon()
@@ -73,6 +76,8 @@ class MainWindow(QtGui.QMainWindow):
         
         self.notifyHandler = NotifyHandler()
         self.show()
+        self.raise_()
+        self.activateWindow()
     
     def createAppMenuBar(self):
         '''
@@ -85,7 +90,7 @@ class MainWindow(QtGui.QMainWindow):
         
         settingsAction = QtGui.QAction("&Options", self)
         settingsAction.setToolTip('Open program options')
-        settingsAction.triggered.connect(self.openSettings)
+        settingsAction.triggered.connect(lambda: self.openSettings(self))
         fileMenu.addAction(settingsAction)
         
         quitAction = QtGui.QAction("&Quit", self)
@@ -128,14 +133,18 @@ class MainWindow(QtGui.QMainWindow):
         aboutDialog = AboutDialog()
         aboutDialog.exec_()
     
-    def openSettings(self):
+    @QtCore.pyqtSlot()
+    def openSettings(self, parent=None):
         '''
         Show the Settings Dialog
         
         '''
-        
-        settingsDialog = SettingsDialog()
-        settingsDialog.exec_()
+        settingsDialog = SettingsDialog(parent)
+        if parent:
+            settingsDialog.exec_()
+        else:
+            self.settingsDialog = settingsDialog
+            self.settingsDialog.show()
         pass
     
     def loadPairing(self):
@@ -158,9 +167,6 @@ class MainWindow(QtGui.QMainWindow):
         
         self.EventType = EventType(self.__gateway)
     
-    def shutdownGateway(self):
-        self.__gateway.entry_point.removeEventListener(self.callback)
-    
     def displayEvent(self, event):
         self.editArea.append(event.toString())
     
@@ -170,8 +176,7 @@ class MainWindow(QtGui.QMainWindow):
         self.receiveEvent.emit(event)
         
     def handleEvent(self, event):
-        print "Event: " + event.toString()
-        
+      
         # Add/Remove on [Diss]Connect events
         if event.getEventType() == event.EventType.CLIENT_CONNECT:
             device = event.getDevice()
@@ -184,39 +189,33 @@ class MainWindow(QtGui.QMainWindow):
                 self.connectList.removeDevice(device) 
             pass
         
-        # (Impl later) Check pref if should handle event
-        # (Impl later) Get notify prefs
-        # Create notify widget if applicable
-        self.notifyHandler.handleEvent(event)
-        #widget = NotifyWidget.createInstance(event)
+        # Check whether to display notification
+        settingsData = SettingsData.fromPickle()
+        if settingsData.shouldDisplayEvent(event):
+            self.notifyHandler.queueEvent(event)
+        
     
     def changeEvent(self, event):
-        if type(event) is QtCore.QEvent.WindowStateChange:
+        super(MainWindow, self).changeEvent(event)
+        if type(event) is QtGui.QWindowStateChangeEvent:
             if self.isMinimized():
-                self.minimizeToTray()
+                QtCore.QTimer.singleShot(0, partial(self.minimizeToTray))
                 event.ignore()
     
     def maximizeFromTray(self):
-        self.setVisible(True)
         self.show()
+        self.raise_()
+        self.activateWindow()
     
     def minimizeToTray(self):
         self.hide()
-        self.setVisible(False)
         self.tray.display(True)
         
     def closeEvent(self, event):
-        self.shutdownGateway()
-        self.deleteLater()
-        
-    @staticmethod    
-    def debug_trace():
-        '''Set a tracepoint in the Python debugger that works with Qt'''
-        from PyQt4.QtCore import pyqtRemoveInputHook
-        from pdb import set_trace
-        pyqtRemoveInputHook()
-        set_trace()   
-
+        if self.callback:
+            self.__gateway.entry_point.removeEventListener(self.callback)
+        event.accept()
+           
 class ConnectList(QtGui.QListWidget):
     connectedDict = []
     
@@ -243,8 +242,8 @@ class ConnectList(QtGui.QListWidget):
             
 
 class NotifyHandler:
-    ''' Show the notification for 7 seconds '''
-    SHOW_TIME = 7 
+    
+    SHOW_TIME = 7  # Show the notification for 7 seconds 
     
     queue = Queue()
             
@@ -256,7 +255,7 @@ class NotifyHandler:
             pixmap = self.getPixMap(event)
             self.display(pixmap)
             
-    def handleEvent(self, event):
+    def queueEvent(self, event):
         NotifyHandler.queue.put(event)
         self.run()
         
