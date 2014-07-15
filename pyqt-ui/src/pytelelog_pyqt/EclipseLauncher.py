@@ -17,7 +17,9 @@ class Launcher:
         app = QtGui.QApplication(sys.argv)
         app.setApplicationName("Droid Navi")
         app.setApplicationVersion("0.1")
+        app.setQuitOnLastWindowClosed(False)
         mainWindow = MainWindow(self.__gateway)
+        mainWindow.destroyed.connect(lambda: app.quit())
         sys.exit(app.exec_())
        
 if __name__ == '__main__':
