@@ -1,16 +1,20 @@
-Droid Navi v0.1 alpha
+Droid Navi v1.0
 
-DISCLAIMER: This is an alpha version of the software meaning there are still a large number of bugs as well
-	as very bland and clunky GUIs. This is not a final version of the software. Its a release to show off the
-	basic functionality.
+This app is now closer to a beta. The UI has been greatly improved in both the android app
+and the PC version. Some bugs have been fixed and the application should shutdown without 
+problems.
+
+Note on using on Mac: The app can work on Mac but OS X handles Apps slightly different and
+	I can't guarantee the app will shutdown cleanly on the Mac. Plus you will need to start
+	it from Terminal. This is on my TODO list now.
 
 INSTALLATION
 ============
-1) Download the droidnavi-0.1-release.zip from GitHub.
+1) Download the droidnavi-1.0-release.zip from GitHub.
 	- Alternatively you can compile from the code on the hub. Please see the Repository README.md for instructions.
 2) Extract the zip into a folder.
 	- Inside you should find 2 folders. "android" and "desktop"
-3) Copy the droidnavi-android-0.1.apk to your phone and install it by running it.
+3) Copy the droidnavi-android-1.0.apk to your phone and install it by running it.
 	- Note: An explanation of why certain permissions are required by the app
 		can be found in the main repository's README.md
 4) Go back to your computer and find the "desktop" folder again, run the DroidNavi.exe.
@@ -19,8 +23,8 @@ INSTALLATION
 6) Run the android App.
 	Note: In order for the program to work the phone and desktop must be on the same
 		network. So you will need to have Wi-Fi running on the phone.
-7) Slide to the right to get to the pairing screen.
-8) Select pair and "Manually input IP"
+7) Slide to the "Pair" tab.
+8) Select "Pair with new PC"
 9) Input the IP for the desktop and hit ok.
 10) Slide back to the left and click the "Service Off" button. This will now light up and change
 	to "Service On."	
@@ -59,6 +63,3 @@ BUGS, ISSUES, QUIRKS
 	alert will show up. While this is a bug in functionality, there isn't any way to avoid it due to how the
 	android API handles reporting changes in Call State.
 	
-* What's with this GUI?! : Yes, I know. It's ugly. This is an initial release of the software meant to show
-	off the BASIC functionality of the program. Improvements on the GUI along with settings and more features
-	will come in later releases.

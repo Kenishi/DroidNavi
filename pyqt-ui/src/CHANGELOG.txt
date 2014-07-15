@@ -1,5 +1,6 @@
 v1.0
 -----
+PC Version
 * Improved the overall User Interface
 * Added About dialog
 * Added Connected List to show connected device
@@ -8,6 +9,10 @@ v1.0
 * Added System Tray Icon so main window can be minimized to system tray
 * Added App logo/icon to About and Windows
 
+Android Version
+* Added named tabs pane to make navigation better
+* Added an about screen
+* Added QR Code pairing to the app. Note: You need to install "Barcode Scanner" to use it.
 
 v0.1
 -----
