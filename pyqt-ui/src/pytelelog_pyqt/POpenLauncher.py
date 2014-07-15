@@ -8,10 +8,12 @@ import os
 import glob
 import time
 
+import PyQt4.Qt as Qt
 from PyQt4 import QtGui
 from py4j.java_gateway import JavaGateway
 from MainWindow import MainWindow
 import subprocess
+from pytelelog_pyqt.components.ProgressLoader import ProgressLoader
 
 class POpenLauncher:
     '''
@@ -24,6 +26,7 @@ class POpenLauncher:
         app = QtGui.QApplication(sys.argv)
         app.setApplicationName("Droid Navi")
         app.aboutToQuit.connect(self.exitHandler)
+        self.app = app
         
         # Look for the gateway server
         jar_file = glob.glob('../lib/droidnavi-gateway-server*')
@@ -52,6 +55,7 @@ class POpenLauncher:
             '''Attempt to setup connection to gateway'''
             attempt_count = 0
             self.__gateway = None
+            
             while not self.__gateway:
                 try:
                     self.__gateway = JavaGateway(start_callback_server=True)
@@ -61,20 +65,28 @@ class POpenLauncher:
                     if attempt_count > 5:
                         break
                     time.sleep(3)
+
             # Exit if we got no connection
             if not self.__gateway:
                 self.serverProc.kill()
-                QtGui.QMessageBox.critical(None, "Error", "Failed to start Java server.")
+                QtGui.QMessageBox.critical(None, "Error", "Failed to start java server. Exiting.")
                 sys.exit(1)
+                return
             
-            #loadingDialog.finish()
+            app.setQuitOnLastWindowClosed(False)
+            
             mainWindow = MainWindow(self.__gateway)
+            mainWindow.setAttribute(Qt.Qt.WA_DeleteOnClose)
+            mainWindow.destroyed.connect(self.quitApp)
             
-            result = app.exec_()
+            result = self.app.exec_()
 
             self.serverProc.kill()
             self.serverProc.wait()
             sys.exit(result)
+    
+    def quitApp(self, obj):
+        self.app.quit()
     
     def exitHandler(self):
         self.__gateway.shutdown(True)
