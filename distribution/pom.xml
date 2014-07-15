@@ -7,7 +7,7 @@
   <parent>
     <groupId>droidnavi</groupId>
     <artifactId>droidnavi</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
   </parent>
   
   <artifactId>distribution</artifactId>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>droidnavi</groupId>
       <artifactId>droidnavi-pyqt-ui</artifactId>
-      <version>0.1</version>
+      <version>1.0</version>
 	  <classifier>distribution</classifier>
 	  <type>zip</type>
     </dependency>

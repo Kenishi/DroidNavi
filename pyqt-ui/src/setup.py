@@ -40,16 +40,23 @@ qtgui = ".", [pyqt4_site + "QtGui4.dll"]
 dat_files.append(qtcore)
 dat_files.append(qtgui)
     
+# Add Logo
+dat_files.append((".", ["./logo.png"]))
+
 # Add README
 dat_files.append((".", ["./README.txt"]))
 
+# Add CHANGELOG
+dat_files.append((".", ["./CHANGELOG.txt"]))
+
 setup(name = "DroidNavi",
-      version = "0.1",
+      version = "1.0",
       author = "Jeremy May",
       url = "http://github.com/Kenishi",
       license = "GNU General Public License (GPL) v2",
       data_files = dat_files,
-      windows = [{"script": "DroidNavi.py"}],
+      windows = [{"script": "DroidNavi.py",
+                  "icon_resources": [(1, './logo.ico')]}],
       options = {"py2exe": {"bundle_files": 1,
                             "compressed": True,
                             "packages":["py4j", "pytelelog_pyqt"],
