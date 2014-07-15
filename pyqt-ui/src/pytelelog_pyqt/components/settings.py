@@ -16,9 +16,17 @@ class SettingsDialog(QtGui.QDialog):
         
         super(SettingsDialog, self).__init__(parent)
         
+        self.parent = parent
         self.settingsData = self.loadSettings()
+        self.setWindowTitle("Settings")
+        
+        if parent:
+            self.setModal(True)
+        else:
+            self.setModal(False)
+            
         self.initUi()
-        self.setModal(True)
+
     
     def initUi(self):
         layout = QtGui.QVBoxLayout()
@@ -33,7 +41,6 @@ class SettingsDialog(QtGui.QDialog):
         
         self.setLayout(layout)
         
-    
     def onApply(self):
         self.settingsData.save()
         self.applyBtn.setEnabled(False)
@@ -41,7 +48,10 @@ class SettingsDialog(QtGui.QDialog):
     
     def onOK(self):
         self.settingsData.save()
-        self.accept()
+        if self.isModal():
+            self.accept()
+        else:
+            self.close()
         pass
     
     def onOptionChanged(self):
@@ -82,7 +92,10 @@ class SettingsDialog(QtGui.QDialog):
         actionLayout = QtGui.QHBoxLayout()
         
         cancelBtn = QtGui.QPushButton("Cancel")
-        cancelBtn.clicked.connect(self.reject)
+        if self.isModal():
+            cancelBtn.clicked.connect(self.reject)
+        else:
+            cancelBtn.clicked.connect(self.close)
         actionLayout.addWidget(cancelBtn)
         
         self.applyBtn = QtGui.QPushButton("Apply")
@@ -116,6 +129,16 @@ class SettingsData(object):
     
     def getMissed(self):
         return self.notify.get("missed")
+    
+    def shouldDisplayEvent(self, event):
+        if event.getEventType() == event.EventType.CLIENT_CONNECT:
+            return self.getConnect()
+        elif event.getEventType() == event.EventType.INCOMING_CALL:
+            return self.getIncoming()
+        elif event.getEventType() == event.EventType.MISSED_CALL:
+            return self.getMissed()
+        elif event.getEventType == event.EventType.SHUTDOWN:
+            return self.getDisconnect()
     
     def save(self):
         
