@@ -13,6 +13,7 @@ class PairingDialog(QtGui.QDialog):
 
     def __init__(self, parent=None):
         super(PairingDialog, self).__init__(parent)
+        self.setWindowTitle("Pairing")
     
     def exec_(self, *args, **kwargs):
         if self.initUi():
