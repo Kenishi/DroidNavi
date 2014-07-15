@@ -1,0 +1,14 @@
+v1.0
+-----
+* Improved the overall User Interface
+* Added About dialog
+* Added Connected List to show connected device
+* Added Settings Dialog
+* Added Pairing Dialog Helper
+* Added System Tray Icon so main window can be minimized to system tray
+* Added App logo/icon to About and Windows
+
+
+v0.1
+-----
+* Initial release
