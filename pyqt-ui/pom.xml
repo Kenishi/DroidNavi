@@ -24,7 +24,7 @@
   	<dependency>
   		<groupId>droidnavi</groupId>
   		<artifactId>droidnavi-gateway-server</artifactId>
-		<version>0.1</version>
+		<version>1.0</version>
   	</dependency>
   </dependencies>
   
