@@ -25,12 +25,21 @@ INSTALLATION
 		network. So you will need to have Wi-Fi running on the phone.
 7) Slide to the "Pair" tab.
 8) Select "Pair with new PC"
-9) Input the IP for the desktop and hit ok.
+9) Click "Pair" on PC App.
+
+Manual Input Method:
+9.1) Enter the IP on the PC in the App box.
+9.2) Hit OK
+
+QR Code:
+9.1) Use the QR Code in the app. 
+
 10) Slide back to the left and click the "Service Off" button. This will now light up and change
 	to "Service On."	
 11) If everything worked correctly, you should see a "Phone Connected" screen pop up in the bottom
 	right hand corner of your desktop screen. You should now receive alerts when you get a call or have
 	missed calls.
+12) Press Home. Pressing "Back" may cause the application to exit.
 
 What is this?
 =============
@@ -44,7 +53,6 @@ What's with the name?
 'Droid' should be obvious, anDROID. Some might mistake Navi for NAVIgation but that's not the meaning.
 In the Nintendo 64 game, Zelda: Ocarina of Time, there was a (annoying?) fairy that would constantly 
 say "Hey Listen!" To bring your attention to certain things. That fairy's name was Navi. 
-
 
 Why would I need this?
 ======================
