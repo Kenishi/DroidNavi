@@ -15,7 +15,11 @@ class Tray():
 
     def __init__(self, parent):
         
-        self.tray = QSystemTrayIcon(AppIcon())
+        icon = AppIcon.getAppIcon()
+        if icon:
+            self.tray = QSystemTrayIcon(icon)
+        else:
+            self.tray = QSystemTrayIcon()
         self.parent = parent
         
         self.tray.setToolTip("Droid Navi")

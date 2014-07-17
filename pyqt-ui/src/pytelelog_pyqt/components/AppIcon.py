@@ -10,13 +10,20 @@ from PyQt4 import QtGui
 
 class AppIcon(QtGui.QIcon):
 
-    def __init__(self):
-        f = glob.glob('./logo.png')[0]
+    def __init__(self, f):
+        super(AppIcon, self).__init__(f)
+    
+    @classmethod
+    def getAppIcon(cls):
+        f = glob.glob('./logo.png')
         if f:
-            super(AppIcon, self).__init__(f)
-            return
-        f = glob.glob('../logo.png')[0]
+            f = f[0]
+            return cls(f)
+        f = glob.glob('../logo.png')
         if f:
-            super(AppIcon, self).__init__(f)
-            return
+            f = f[0]
+            return cls(f)
+        
+        return None
+        
         
