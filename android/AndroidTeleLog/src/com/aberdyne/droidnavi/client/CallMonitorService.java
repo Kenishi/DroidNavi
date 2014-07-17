@@ -11,6 +11,9 @@ public class CallMonitorService extends Service {
 	private EventDispatchThread m_eventDispatchThread = null;
 	private PhoneStateListener m_stateListener = null;
 	
+	/* Service Status */
+	private static boolean m_isRunning = false;
+	
 	/* Static Timer Variables for Unread Missed Calls Checking */
 	private Timer m_timer = null;
 	private UnreadMissedCallTimer m_checkMissCallsTask = null;
@@ -26,11 +29,11 @@ public class CallMonitorService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		/* Event and State handling */
+		// Event and State handling
 		m_eventDispatchThread = new EventDispatchThread(this);
 		m_stateListener = new PhoneStateListener(m_eventDispatchThread, getContentResolver());
 		
-		/* Setup timer to check unread Missed calls */
+		// Setup timer to check unread Missed calls
 		m_timer = new Timer(true);
 		m_checkMissCallsTask = new UnreadMissedCallTimer(this, m_stateListener);
 		m_timer.schedule(m_checkMissCallsTask, 0, CHECK_MISS_CALL_PERIOD);
@@ -42,10 +45,14 @@ public class CallMonitorService extends Service {
 		filter.addAction("android.intent.action.PHONE_STATE");
 		filter.addAction("android.intent.action.NEW_OUTGOING_CALL");
 		registerReceiver(m_stateListener, filter);
+		
+		m_isRunning = true;
 	}
 	
 	@Override
 	public void onDestroy() {
+		m_isRunning = false;
+		
 		// Stop Unread Miss Call Timer
 		m_timer.cancel();
 		m_timer = null;
@@ -58,6 +65,14 @@ public class CallMonitorService extends Service {
 		m_eventDispatchThread.quit();
 		
 		super.onDestroy();
+	}
+	
+	/**
+	 * Return whether the service is running or not
+	 * @return True if it is, False if it isn't
+	 */
+	public static boolean isRunning() {
+		return m_isRunning;
 	}
 
 }
