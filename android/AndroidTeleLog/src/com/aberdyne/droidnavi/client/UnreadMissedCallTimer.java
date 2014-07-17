@@ -77,6 +77,7 @@ public class UnreadMissedCallTimer extends TimerTask {
 					m_stateListener.onUnreadMissedCall("UNKNOWN", date, m_context);
 				}
 			} while(cursor.moveToNext());
+			cursor.close();
 		}
 		logger.info("EXIT UnreadMissedCallTimer.run");
 	}
