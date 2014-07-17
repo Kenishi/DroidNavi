@@ -39,7 +39,6 @@ QR Code:
 11) If everything worked correctly, you should see a "Phone Connected" screen pop up in the bottom
 	right hand corner of your desktop screen. You should now receive alerts when you get a call or have
 	missed calls.
-12) Press Home. Pressing "Back" may cause the application to exit.
 
 What is this?
 =============
