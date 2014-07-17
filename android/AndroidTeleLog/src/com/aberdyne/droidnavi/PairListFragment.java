@@ -26,11 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class PairListFragment extends ListFragment {
-	public Activity act;
 	
 	public PairListFragment() {
 		super();
-		act = this.getActivity();
 	}
 	
 	@Override
@@ -98,16 +96,18 @@ public class PairListFragment extends ListFragment {
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView view = (TextView)super.getView(position, convertView, parent); 
+			View view = super.getView(position, convertView, parent); 
 			ListItem item = items.get(position);
+			TextView txtView = (TextView)view.findViewById(android.R.id.text1);
 			
 			if(item != ListItem.PAIR_ITEM) {
 				int color = item.isConnected() ? 
-						Color.parseColor("#669900") : Color.parseColor("#CC0000");
-				view.setTextColor(color);
+						view.getResources().getColor(android.R.color.holo_green_dark) : 
+						view.getResources().getColor(android.R.color.holo_red_dark);
+				txtView.setTextColor(color);
 			}
 			else {
-				view.setTextColor(Color.BLACK);
+				txtView.setTextColor(view.getResources().getColor(android.R.color.primary_text_dark));
 			}
 			
 			return view;
