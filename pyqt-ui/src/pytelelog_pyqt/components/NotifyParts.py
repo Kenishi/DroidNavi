@@ -32,7 +32,12 @@ class Photo(QtGui.QLabel):
     
     @classmethod
     def fromBytes(cls, event, pref):
-        photo_bytes = event.getContactInfo().getPhoto().getDecodedData();
+        photo = event.getContactInfo().getPhoto()
+        if photo:
+            photo_bytes = photo.getDecodedData();
+        else:
+            return None
+        
         print type(photo_bytes)
         if len(photo_bytes) > 0:
             pix = QtGui.QPixmap()
