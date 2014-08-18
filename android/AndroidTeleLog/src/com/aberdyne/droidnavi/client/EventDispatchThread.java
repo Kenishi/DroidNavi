@@ -40,6 +40,11 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	/* Application Variables */
 	private Context m_context = null;
 	
+	/*
+	 * Sends the events and helps decide between multicast or direct-server
+	 */
+	private NetworkDispatch m_networkDispatch = new NetworkDispatch();
+	
 	public EventDispatchThread(Context context) {
 		if(context == null) {
 			throw new NullPointerException();
@@ -56,13 +61,15 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 		
 		CheckServerThread checkServerThread = new CheckServerThread(this);
 		while(!isStop) {
-			// Check standby servers if we aren't currently
-			if(! checkServerThread.isAlive()) { 
-				checkServerThread = new CheckServerThread(this);
-				checkServerThread.start();
+			if(!m_networkDispatch.hasMulticast()) {
+				// Check standby servers if we aren't currently
+				if(! checkServerThread.isAlive()) { 
+					checkServerThread = new CheckServerThread(this);
+					checkServerThread.start();
+				}
 			}
 			
-			if(m_queue.size() == 0 || m_connectedServers.size() == 0) {
+			if(m_queue.size() == 0 || !canDispatch()) {
 				try {
 					sleep(SLEEP_TIMEOUT);
 				} catch(InterruptedException e) {}
@@ -76,15 +83,28 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 			}
 			
 			// Dispatch event
-			for(ServerConnection server : m_connectedServers) {
-				boolean result = server.sendEvent(event);
-				if(result == false) {
-					// Move to standby
-					removeConnectedServer(server);
-					addStandByServer(server);
-					
-					// Let others know of the change
-					ServerListManager.updateServer(m_context, server);
+			if(m_networkDispatch.hasMulticast()) {
+				m_networkDispatch.sendEvent(event);
+			}
+			else {
+				/*
+				 * Attempt to send to multicast relay server.
+				 * Loop will break on first success, no need to spam the network
+				 * with multiple multicasts.
+				 */
+				for(ServerConnection server : m_connectedServers) {
+					boolean result = m_networkDispatch.sendEvent(event, server);
+					if(result == false) {
+						// Move to standby
+						removeConnectedServer(server);
+						addStandByServer(server);
+						
+						// Let others know of the change
+						ServerListManager.updateServer(m_context, server);
+					}
+					else {
+						break;
+					}
 				}
 			}
 		}
@@ -175,6 +195,24 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 			break; // This class issues UPDATEs, action already handled.
 		}
 		this.interrupt();
+	}
+	
+	/**
+	 * Check if an event could be dispatched right now.
+	 * 
+	 * If multicast is available then this always returns true.
+	 * May return true or false depending on current server connections.
+	 * 
+	 * @return True if a message could be dispatch. False if not.
+	 */
+	private boolean canDispatch() {
+		if(m_networkDispatch.hasMulticast()) {
+			return true;
+		}
+		else if(m_connectedServers.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**

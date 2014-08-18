@@ -42,7 +42,7 @@ public class TeleLogServer extends Thread {
 				m_isListening = true;
 				Socket sock = serverSocket.accept();
 				m_isListening = false;
-				Client client = new Client(sock, m_operator);
+				Client client = (Client)new TCPClient(sock, m_operator);
 				if(client.handshake()) {
 					client.start(); // Start the event reader loop
 					logger.info(client.toString() + " connected.");;
