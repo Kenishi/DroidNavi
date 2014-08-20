@@ -213,10 +213,10 @@ public class ContactInfoPoller {
 	            photoBytes = c.getBlob(0);
 	    } catch (Exception e) {
 	        logger.error("Failed to get photo data blob.");
-	    } finally {
-	        c.close();
-	    }           
-
+	    }
+	               
+	    c.close();
+	    
 	    if (photoBytes != null) {
 	    	String encodedBase64 = new String(Base64.encode(photoBytes, Base64.NO_WRAP));
 	    	ret = Photo.androidConstructor(encodedBase64);

@@ -4,24 +4,48 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.os.AsyncTask;
 import pctelelog.EventSerializer;
+import pctelelog.TeleLogServer;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.HeartBeatEvent;
 
-public class MulticastSender {
+public class MulticastSender extends AsyncTask<String, Void, Boolean>{
 	private static final Logger logger = LoggerFactory.getLogger(MulticastSender.class);
 	
+	private static final int PORT = TeleLogServer.MULTI_LIST_PORT;
+	
+	@Override
+	protected Boolean doInBackground(String...json) {
+		boolean result = sendEvent(json[0]);
+		return Boolean.valueOf(result);
+	}
+	
 	public static boolean checkMulticastAvailability() {
-		return sendEvent(new HeartBeatEvent());
+		return MulticastSender.sendEvent(new HeartBeatEvent());
 	}
 	
 	public static boolean sendEvent(AbstractEvent event) {
 		try {
-			return sendEvent(EventSerializer.serialize(event));
+			String json = EventSerializer.serialize(event);
+			String[] out = {json};
+			
+			try {
+				return new MulticastSender().execute(out).get().booleanValue();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
 		} catch (IOException e) {
 			logger.error("Failed to serialize event.");
 			return false;
@@ -36,7 +60,7 @@ public class MulticastSender {
 			
 			// Build Packet
 			DatagramPacket packet = new DatagramPacket(json.getBytes(), json.getBytes().length,
-					sessAddr, 5008);
+					sessAddr, PORT);
 			
 			// Broadcast
 			socket.send(packet);

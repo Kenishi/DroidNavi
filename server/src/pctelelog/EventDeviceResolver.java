@@ -23,7 +23,7 @@ public class EventDeviceResolver {
 	 * @param event The event to attach Device info to.
 	 * @return Return the event with the device set
 	 */
-	static public AbstractEvent resolveDevice(Client client, AbstractEvent event) {
+	static public AbstractEvent resolveDevice(ClientProperties client, AbstractEvent event) {
 		
 		String hostname = client.getInetAddress().getHostName();
 		

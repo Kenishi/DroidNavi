@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pctelelog.EventSerializer;
+import pctelelog.Packet;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.ClientConnectEvent;
 import pctelelog.events.HeartBeatEvent;
@@ -241,7 +242,10 @@ public class ServerConnection implements Comparable<String> {
 				!server.isOutputShutdown()) {
 			try {
 				logger.info("Writing bytes");
-				server.getOutputStream().write(json.getBytes());
+				Packet[] packets = Packet.createPackets(json);
+				for(Packet packet: packets) {
+					server.getOutputStream().write(packet.serialize());
+				}
 				m_lastEvent = new Date(); // Update last event
 			} catch (IOException e) {
 				setStandbyStatus(true);

@@ -78,6 +78,7 @@ public class UnreadMissedCallTimer extends TimerTask {
 				}
 			} while(cursor.moveToNext());
 		}
+		cursor.close();
 		logger.info("EXIT UnreadMissedCallTimer.run");
 	}
 

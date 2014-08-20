@@ -1,5 +1,9 @@
 package pctelelog;
 
+import io.netty.channel.Channel;
+import io.netty.channel.socket.DatagramChannel;
+import io.netty.channel.socket.nio.NioDatagramChannel;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,8 +18,9 @@ public class EventOperator {
 	
 	private Logger logger = LogManager.getLogger(EventOperator.class);
 	
+	private static final EventOperator instance = new EventOperator();
 	private CopyOnWriteArrayList<EventListener> m_listeners = new CopyOnWriteArrayList<EventListener>();
-	private ClientPool m_pool = new ClientPool();
+	private DatagramChannel m_multi = null;
 	
 	/* Shutdown flag is used to keep the
 	 * operator from dispatching events when shutting down.
@@ -23,6 +28,10 @@ public class EventOperator {
 	 * longer shutting down rather than immediately.
 	 */
 	private boolean isShutdown = false; 
+	
+	public static EventOperator instance() {
+		return instance;
+	}
 	
 	/**
 	 * Add/Register the event listener to receive events.
@@ -50,43 +59,23 @@ public class EventOperator {
 		return false;
 	}
 	
-	public Client[] getClientsInPool() {
-		return m_pool.getPool();
+	public void setMultiCast(DatagramChannel ch) {
+		m_multi = ch;
 	}
 	
-	protected void onEvent(final Client client, AbstractEvent event) {
+	protected void onEvent(final ClientProperties client, AbstractEvent event, boolean sendMulti) {
 		if(event == null || client == null)  {
 			return;
 		}
 		
-		if(event instanceof ClientSocketClosedEvent) {
-			m_pool.removeClient(client);
+		if(sendMulti && m_multi != null) { // Relay to multicast
+			m_multi.writeAndFlush(event);
 		}
-		else if(event instanceof HeartBeatEvent) {  // Do nothing with heartbeats
-			return; 
-		}
+		
 		event = EventDeviceResolver.resolveDevice(client, event);
 		dispatchEvent(event);
 	}
-	
-	protected synchronized void addClient(Client sock) {
-		m_pool.addClient(sock);
-	}
-	
-	protected synchronized void removeClient(Client client) {
-		m_pool.removeClient(client);
-	}
-	
-	/**
-	 * Shuts down the Event Operator 
-	 * 
-	 */
-	protected synchronized void shutdown() {
-		isShutdown = true;
-		// Shutdown all sockets
-		m_pool.shutdown();
-	}
-	
+		
 	private void dispatchEvent(AbstractEvent event) {
 		if(isShutdown) return;
 		
