@@ -31,7 +31,7 @@ class AboutDialog(QtGui.QDialog):
         logoLabel.setPixmap(img)
         layout.addWidget(logoLabel)
         
-        aboutStr =  ("Droid Navi v1.0\n" +
+        aboutStr =  ("Droid Navi v1.1\n" +
                     "\n" +
                     "Licensed under LGPL v2.0\n" +
                     "\n" +

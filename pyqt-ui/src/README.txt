@@ -1,8 +1,17 @@
-Droid Navi v1.0
+Droid Navi v1.1
 
-This app is now closer to a beta. The UI has been greatly improved in both the android app
-and the PC version. Some bugs have been fixed and the application should shutdown without 
-problems.
+Version 1.1 brings 2 new things.
+
+1) NIO Networking: I removed the blocking/threaded system I was using on the desktop client.
+	This has allowed me to simplify a lot of the code by a lot.
+
+2) Multicasting Events: I have added the ability for phones to send events via UDP multicast.
+	This helps a lot because the phone no longer has to worry about keeping a constant connection
+	with the desktop app or managing numerous IPs. 
+	One things to note though. Not all phones can do multicasting and some routers may filter multicast packets.
+	If you do not have multicasting, you can still fall back on connecting to computers using IPs.
+	In addition, if you phone doesn’t support multicasting, the desktop client will now serve as a multicast relay!
+	See Bugs and quirks below for a few notes on multicasting.
 
 Note on using on Mac: The app can work on Mac but OS X handles Apps slightly different and
 	I can't guarantee the app will shutdown cleanly on the Mac. Plus you will need to start
@@ -61,6 +70,11 @@ the corner of your screen showing you the caller info.
 
 BUGS, ISSUES, QUIRKS
 ====================
+* Multicast: If your phone can do multicast but your router/network is blocking the packets. Then it won’t be possible
+	use the app at all. I’m working on a “Full Multicast Test” that will help figure out if multicast is fully 
+	supported and if not, fall back on TCP/IP. Either that or just add an option to enable/disable it.
+	If you have this issue, use v1.0 till then, functionally its identical to v1.1.
+
 * Continual Missed Call Alerts: If you have a missed call on your phone, you will continue to receive alerts
 	about the missed call until you go into Call Log on the phone and clear the status. This is not a bug.
 	The purpose of the program is not to by pass having to go to your phone, its to let you know that 

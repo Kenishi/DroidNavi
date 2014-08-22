@@ -50,7 +50,7 @@ dat_files.append((".", ["./README.txt"]))
 dat_files.append((".", ["./CHANGELOG.txt"]))
 
 setup(name = "DroidNavi",
-      version = "1.0",
+      version = "1.1",
       author = "Jeremy May",
       url = "http://github.com/Kenishi",
       license = "GNU General Public License (GPL) v2",
