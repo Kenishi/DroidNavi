@@ -5,6 +5,7 @@ import com.aberdyne.droidnavi.client.CallMonitorService;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,8 +43,8 @@ public class StatusFragment extends Fragment {
 		public StatusToggleButton(Context context) {
 			super(context);
 			setTextOn("Service Running");
-			setTextOff("Service Off");
-			setChecked(false);
+			setTextOff("Service Stopped");
+			setChecked(CallMonitorService.isRunning());
 		}
 		
 		@Override

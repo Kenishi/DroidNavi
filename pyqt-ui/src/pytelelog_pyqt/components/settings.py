@@ -131,14 +131,21 @@ class SettingsData(object):
         return self.notify.get("missed")
     
     def shouldDisplayEvent(self, event):
-        if event.getEventType() == event.EventType.CLIENT_CONNECT:
-            return self.getConnect()
-        elif event.getEventType() == event.EventType.INCOMING_CALL:
+        # Create easy ref enum EventType
+        EventType = event.EventType
+        
+        # Determine type and return toggle
+        e_type = event.getEventType()
+        if e_type == EventType.INCOMING_CALL:
             return self.getIncoming()
-        elif event.getEventType() == event.EventType.MISSED_CALL:
+        elif e_type == EventType.MISSED_CALL:
             return self.getMissed()
-        elif event.getEventType == event.EventType.SHUTDOWN:
-            return self.getDisconnect()
+        elif e_type == EventType.CLIENT_CONNECT:
+            return self.getConnect()
+        elif e_type == EventType.SHUTDOWN:
+            return self.getDisconnect()  
+        else:
+            return False
     
     def save(self):
         

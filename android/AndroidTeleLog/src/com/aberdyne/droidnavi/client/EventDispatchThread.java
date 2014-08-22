@@ -160,7 +160,12 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 			m_queue.add(event);
 		}
 		else {
-			logger.debug("Event not dispatched");
+			int size = -1;
+			if(m_connectedServers != null) {
+				size = m_connectedServers.size();
+			}
+			logger.debug("Event not dispatched. Connected: " + Integer.toString(size) +
+					" Contains: " + Boolean.toString(m_queue.contains(event)));
 		}
 	}
 	

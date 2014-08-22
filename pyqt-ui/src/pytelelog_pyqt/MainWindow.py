@@ -122,7 +122,9 @@ class MainWindow(QtGui.QMainWindow):
         self.__gateway.entry_point.addEventListener(self.callback)
     
     def initIcon(self):
-        self.setWindowIcon(AppIcon())
+        icon = AppIcon.getAppIcon()
+        if icon:
+            self.setWindowIcon(icon)
     
     def openAbout(self):
         '''

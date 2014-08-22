@@ -34,12 +34,11 @@ Manual Input Method:
 QR Code:
 9.1) Use the QR Code in the app. 
 
-10) Slide back to the left and click the "Service Off" button. This will now light up and change
+10) Slide back to the left and click the "Service Stopped" button. This will now light up and change
 	to "Service On."	
 11) If everything worked correctly, you should see a "Phone Connected" screen pop up in the bottom
 	right hand corner of your desktop screen. You should now receive alerts when you get a call or have
 	missed calls.
-12) Press Home. Pressing "Back" may cause the application to exit.
 
 What is this?
 =============
