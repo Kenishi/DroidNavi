@@ -25,6 +25,7 @@ The Android app requires a number of permissions.
 
 ### What stuff do you use?
 * [Py4j - A Python to Java communication library](http://py4j.sourceforge.net/)
+* Netty 4.1.0-Beta3 on the Desktop Side
 * PyQt - For the UI
 * [Jackson JSON Processor](http://jackson.codehaus.org/)
 * Maven  (Java server & Python UI only.)
