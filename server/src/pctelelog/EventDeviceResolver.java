@@ -1,5 +1,7 @@
 package pctelelog;
 
+import java.net.InetAddress;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,13 +25,13 @@ public class EventDeviceResolver {
 	 * @param event The event to attach Device info to.
 	 * @return Return the event with the device set
 	 */
-	static public AbstractEvent resolveDevice(ClientProperties client, AbstractEvent event) {
+	static public AbstractEvent resolveDevice(InetAddress client, AbstractEvent event) {
 		
-		String hostname = client.getInetAddress().getHostName();
+		String hostname = client.getHostName();
 		
 		Device device;
 		try {
-			device = new Device(hostname, client.getInetAddress());
+			device = new Device(hostname, client);
 		} catch (InvalidDeviceException e) {
 			device = Device.UNKNOWN_DEVICE;
 			logger.catching(e);

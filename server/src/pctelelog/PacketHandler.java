@@ -1,14 +1,14 @@
 package pctelelog;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.ReferenceCountUtil;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.Set;
@@ -23,7 +23,7 @@ import pctelelog.events.AbstractEvent;
  * @author Jeremy May
  *
  */
-public class PacketHandler extends ChannelDuplexHandler {
+public class PacketHandler extends ChannelInboundHandlerAdapter {
 	private final int PRUNE_TIME = 5 * (60 * 1000); // 5 minutes
 	
 	private Hashtable<Long, Vector<Packet>> packets = new Hashtable<Long, Vector<Packet>>();
@@ -37,9 +37,7 @@ public class PacketHandler extends ChannelDuplexHandler {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
-		// Read the packet data into a byte array
-		DatagramPacket dgram = (DatagramPacket)msg;
-		ByteBuf buf = dgram.content();
+		ByteBuf buf = getSenderData(msg);
 		byte[] data = new byte[buf.readableBytes()];
 		buf.readBytes(data);
 		
@@ -47,20 +45,36 @@ public class PacketHandler extends ChannelDuplexHandler {
 		Packet packet = Packet.deserialize(data);
 		AbstractEvent event = rebuild(packet);
 		if(event != null) {
+			InetAddress remote = getSenderAddress(ctx, msg);
+			event = EventDeviceResolver.resolveDevice(remote, event);
 			ctx.fireChannelRead(event);
 		}
 		ReferenceCountUtil.release(msg);
 	}
 	
-	@Override
-	public void write(ChannelHandlerContext ctx, Object msg,
-			ChannelPromise promise) throws Exception {
-		AbstractEvent event = (AbstractEvent)msg;
-		Packet[] packets = Packet.createPackets(event);
-		for(Packet packet : packets) {
-			ByteBuf buf = Unpooled.copiedBuffer(packet.serialize());
-			ctx.writeAndFlush(buf, promise);
-			buf.release();
+	private InetAddress getSenderAddress(ChannelHandlerContext ctx, Object msg) {
+		InetAddress addr = null;
+		if(msg instanceof DatagramPacket) {
+			DatagramPacket dgram = (DatagramPacket)msg;
+			addr = dgram.sender().getAddress();
+		}
+		else if(msg instanceof ByteBuf) {
+			InetSocketAddress tcp = (InetSocketAddress)ctx.channel().remoteAddress();
+			addr = tcp.getAddress();
+		}
+		return addr;
+	}
+	
+	private ByteBuf getSenderData(Object msg) {
+		if(msg instanceof DatagramPacket) { // UDP
+			DatagramPacket dgram = (DatagramPacket)msg;
+			return dgram.content();
+		}
+		else if(msg instanceof ByteBuf) { // TCP
+			return (ByteBuf)msg;
+		}
+		else { // No idea
+			return null;
 		}
 	}
 	
@@ -101,7 +115,7 @@ public class PacketHandler extends ChannelDuplexHandler {
 			// Check if we have all packets
 			if(packets.get(id).size() == packet.getMaxSequency()) {
 				// Rebuild and return Event
-				ByteBuffer buffer = ByteBuffer.allocate(Packet.DATA_SPLIT * packet.getMaxSequency());
+				ByteBuffer buffer = ByteBuffer.allocate((int)Packet.DATA_SPLIT * packet.getMaxSequency());
 				for(Packet p : packets.get(id)) {
 					buffer.put(p.getData());
 				}

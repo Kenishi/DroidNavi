@@ -2,7 +2,6 @@ package pctelelog;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ChannelFactory;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -16,8 +15,6 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.*;
 import java.util.Enumeration;
 
@@ -63,10 +60,6 @@ public class TeleLogServer {
 			m_serverFuture = server.bind(TCP_LISTEN_PORT).sync();
 			
 			// MultiCast Server Realy
-			InetSocketAddress localSockAddr = 
-					new InetSocketAddress(InetAddress.getByName("0.0.0.0"), MULTI_LIST_PORT);
-			InetAddress localInetAddr = InetAddress.getByName("0.0.0.0");
-			
 			InetSocketAddress remoteAddr = 
 					new InetSocketAddress(InetAddress.getByName("224.1.1.1"), MULTI_LIST_PORT);
 			
@@ -78,7 +71,8 @@ public class TeleLogServer {
 			 .channelFactory(new ChannelFactory<NioDatagramChannel>() {
 				 @Override
 				public NioDatagramChannel newChannel() {
-					return new NioDatagramChannel(InternetProtocolFamily.IPv4);
+					NioDatagramChannel ch = new NioDatagramChannel(InternetProtocolFamily.IPv4);
+					return ch;
 				}
 			});
 			b.handler(new ChannelInitializer<NioDatagramChannel>() {
@@ -97,12 +91,11 @@ public class TeleLogServer {
 			Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
 			while(nics.hasMoreElements()) {
 				NetworkInterface nic = nics.nextElement();
-				if(nic.isUp() && !nic.isVirtual()) 
+				if(nic.isUp() && !nic.isVirtual())
 					ch.joinGroup(remoteAddr, nic);
 			}
 			
 			EventOperator.instance().setMultiCast(ch); // Set multi in order to relay TCP events
-			ch.read();
 			
 			logger.info("Servers started.");
 			

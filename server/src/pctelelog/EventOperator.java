@@ -1,8 +1,6 @@
 package pctelelog;
 
-import io.netty.channel.Channel;
 import io.netty.channel.socket.DatagramChannel;
-import io.netty.channel.socket.nio.NioDatagramChannel;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -11,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.HeartBeatEvent;
-import pctelelog.internal.events.ClientSocketClosedEvent;
 import py4j.Py4JException;
 
 public class EventOperator {
@@ -63,8 +60,11 @@ public class EventOperator {
 		m_multi = ch;
 	}
 	
-	protected void onEvent(final ClientProperties client, AbstractEvent event, boolean sendMulti) {
-		if(event == null || client == null)  {
+	protected void onEvent(AbstractEvent event, boolean sendMulti) {
+		if(event == null)  {
+			return;
+		}
+		else if(event instanceof HeartBeatEvent) {
 			return;
 		}
 		
@@ -72,7 +72,6 @@ public class EventOperator {
 			m_multi.writeAndFlush(event);
 		}
 		
-		event = EventDeviceResolver.resolveDevice(client, event);
 		dispatchEvent(event);
 	}
 		
