@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import android.os.AsyncTask;
 import pctelelog.EventSerializer;
+import pctelelog.Packet;
 import pctelelog.TeleLogServer;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.HeartBeatEvent;
@@ -54,19 +55,23 @@ public class MulticastSender extends AsyncTask<String, Void, Boolean>{
 	
 	private static boolean sendEvent(String json) {
 		try {
-			MulticastSocket socket = new MulticastSocket(5008);
+			MulticastSocket socket = new MulticastSocket(PORT);
 			InetAddress sessAddr = InetAddress.getByName("224.1.1.1");
-			socket.joinGroup(sessAddr);
+			socket.setTimeToLive(2);
+						
+			Packet[] packets = Packet.createPackets(json);
+			for(Packet packet : packets) {
+				byte[] data = packet.serialize();
+				// Build Packet
+				DatagramPacket d_pack = new DatagramPacket(data, data.length,
+						sessAddr, PORT);
+				
+				// Broadcast
+				socket.send(d_pack);
+			}
 			
-			// Build Packet
-			DatagramPacket packet = new DatagramPacket(json.getBytes(), json.getBytes().length,
-					sessAddr, PORT);
-			
-			// Broadcast
-			socket.send(packet);
 			
 			// Cleanup
-			socket.leaveGroup(sessAddr);
 			socket.close();
 		}
 		catch(IOException e) {

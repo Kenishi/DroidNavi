@@ -28,13 +28,17 @@ public class NetworkDispatch {
 	}
 	
 	public boolean sendEvent(AbstractEvent event, ServerConnection relayServer) {
+		boolean result = false;
 		if(m_hasMulticast) {
-			return MulticastSender.sendEvent(event);
+			result = MulticastSender.sendEvent(event);
 		}
 		else if(relayServer != null) {
-			return relayServer.sendEvent(event);
+			result =  relayServer.sendEvent(event);
 		}
-		logger.error("Event dispatch failed: No multicast or server");
-		return false;
+		else {
+			logger.error("Event dispatch failed: No multicast or server");
+			return false;
+		}
+		return result;
 	}
 }

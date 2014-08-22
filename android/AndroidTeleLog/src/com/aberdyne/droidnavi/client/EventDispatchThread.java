@@ -69,7 +69,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 				}
 			}
 			
-			if(m_queue.size() == 0 || !canDispatch()) {
+			if(m_queue.size() == 0 || !canDispatchToNetwork()) {
 				try {
 					sleep(SLEEP_TIMEOUT);
 				} catch(InterruptedException e) {}
@@ -84,7 +84,14 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 			
 			// Dispatch event
 			if(m_networkDispatch.hasMulticast()) {
-				m_networkDispatch.sendEvent(event);
+				boolean result = m_networkDispatch.sendEvent(event);
+				
+				if(result) {
+					logger.debug("Event dispatch success (multi): " + event.getEventType().toString());
+				}
+				else {
+					logger.debug("Event dispatch fail (multi): " + event.getEventType().toString());	
+				}
 			}
 			else {
 				/*
@@ -95,6 +102,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 				for(ServerConnection server : m_connectedServers) {
 					boolean result = m_networkDispatch.sendEvent(event, server);
 					if(result == false) {
+						logger.debug("Event dispatch fail (tcp): " + event.getEventType().toString());
 						// Move to standby
 						removeConnectedServer(server);
 						addStandByServer(server);
@@ -103,6 +111,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 						ServerListManager.updateServer(m_context, server);
 					}
 					else {
+						logger.debug("Event dispatch success (tcp): " + event.getEventType().toString());
 						break;
 					}
 				}
@@ -141,7 +150,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	 * @param event An event to dispatch to waiting servers.
 	 */
 	public synchronized void dispatchEvent(AbstractEvent event) {
-		if(m_connectedServers.size() > 0 && !m_queue.contains(event)) {
+		if(canDispatchToNetwork() && !m_queue.contains(event)) {
 			logger.info("Event added to dispatch queue: {}", event);
 			m_queue.add(event);
 			this.interrupt();
@@ -205,7 +214,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	 * 
 	 * @return True if a message could be dispatch. False if not.
 	 */
-	private boolean canDispatch() {
+	private boolean canDispatchToNetwork() {
 		if(m_networkDispatch.hasMulticast()) {
 			return true;
 		}

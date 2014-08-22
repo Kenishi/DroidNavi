@@ -359,10 +359,24 @@ public class ServerConnection implements Comparable<String> {
 		JsonFactory factory = mapper.getJsonFactory();
 		AbstractEvent event = null;
 		try {
-			JsonParser parser = factory.createJsonParser(m_server.getInputStream());
+			byte[] data = new byte[3000];
+			boolean isFinish = false;
+			while(!isFinish) {
+				if(server.getInputStream().available() > 0) {
+					int read = server.getInputStream().read(data);
+					logger.info("Read: " + Integer.toString(read));
+				}
+				else {
+					Thread.sleep(3000);
+					logger.info("Available(2): " + Integer.toString(server.getInputStream().available()));
+					isFinish = server.getInputStream().available() > 0 ? false : true;
+				}
+			}
+			JsonParser parser = factory.createJsonParser(data);
 			logger.info("Reading Hello");
 			JsonNode node = parser.readValueAsTree();
 			event = EventSerializer.deserialize(node);
+			
 			logger.info("Received: " + event.toString());
 			if(event instanceof HelloEvent) {
 				// Send Hello
