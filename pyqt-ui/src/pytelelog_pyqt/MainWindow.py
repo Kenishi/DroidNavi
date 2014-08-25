@@ -119,7 +119,15 @@ class MainWindow(QtGui.QMainWindow):
         
         self.callback = EventListener()
         self.callback.onEvent = self.onEvent
-        self.__gateway.entry_point.addEventListener(self.callback)
+        try:
+            self.__gateway.entry_point.addEventListener(self.callback)
+        except:
+            info = QtGui.QMessageBox()
+            info.setText("Error setting up event callback. Exiting.")
+            info.exec_()
+            self.callback = None
+            self.close()
+            
     
     def initIcon(self):
         icon = AppIcon.getAppIcon()
@@ -216,7 +224,10 @@ class MainWindow(QtGui.QMainWindow):
     def closeEvent(self, event):
         if self.callback:
             self.__gateway.entry_point.removeEventListener(self.callback)
-        event.accept()
+        if type(event) is bool:
+            pass
+        else:
+            event.accept()
            
 class ConnectList(QtGui.QListWidget):
     connectedDict = []
