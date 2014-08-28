@@ -43,7 +43,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 	/*
 	 * Sends the events and helps decide between multicast or direct-server
 	 */
-	private NetworkDispatch m_networkDispatch = new NetworkDispatch();
+	private NetworkDispatch m_networkDispatch = null;
 	
 	public EventDispatchThread(Context context) {
 		if(context == null) {
@@ -51,6 +51,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 		}
 		
 		m_context = context;
+		m_networkDispatch = new NetworkDispatch(m_context);
 		ServerListManager.addServerListListener(this);
 		ServerListManager.getSync(m_context);
 	}
