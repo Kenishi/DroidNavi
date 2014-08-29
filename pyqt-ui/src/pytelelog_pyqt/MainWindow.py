@@ -95,7 +95,7 @@ class MainWindow(QtGui.QMainWindow):
         
         quitAction = QtGui.QAction("&Quit", self)
         quitAction.setToolTip("Quit program")
-        quitAction.triggered.connect(self.closeEvent)
+        quitAction.triggered.connect(self.close)
         fileMenu.addAction(quitAction)
         
         helpMenu = menuBar.addMenu("&Help")
@@ -122,12 +122,16 @@ class MainWindow(QtGui.QMainWindow):
         try:
             self.__gateway.entry_point.addEventListener(self.callback)
         except:
-            info = QtGui.QMessageBox()
-            info.setText("Error setting up event callback. Exiting.")
-            info.exec_()
-            self.callback = None
-            self.close()
-            
+            # Attempt 2
+            QtCore.QThread.sleep(1)
+            try:
+                self.__gateway.entry_point.addEventListener(self.callback)
+            except:
+                info = QtGui.QMessageBox()
+                info.setText("Error setting up event callback. Exiting.")
+                info.exec_()
+                self.callback = None
+                self.close()
     
     def initIcon(self):
         icon = AppIcon.getAppIcon()
