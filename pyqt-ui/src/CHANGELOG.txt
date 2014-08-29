@@ -4,13 +4,12 @@ PC Version
 * Networking backend changed to use NIO Netty library (No more messing with threads!!)
 * Added ability to receive multicast events from the phone now. So no more direct connect needed
 * Added ability to relay a TCP event over multicast, this way only 1 TCP connection is needed on a phone
+* Added testing network capability to handle multicast events
 
 Android Version
 * Now can send events over multicast
-
-Bugs
-* No easy way to fall back onto TCP if phone supports multicast but router blocks packets.
-
+* Changed Status screen to show status on Service and Multicast now
+* Fixed a bug with List Fragments that caused app to crash from duplicate ids
 
 v1.0
 -----

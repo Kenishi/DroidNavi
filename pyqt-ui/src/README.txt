@@ -2,50 +2,61 @@ Droid Navi v1.1
 
 Version 1.1 brings 2 new things.
 
+
 1) NIO Networking: I removed the blocking/threaded system I was using on the desktop client.
 	This has allowed me to simplify a lot of the code by a lot.
+
+
 
 2) Multicasting Events: I have added the ability for phones to send events via UDP multicast.
 	This helps a lot because the phone no longer has to worry about keeping a constant connection
 	with the desktop app or managing numerous IPs. 
 	One things to note though. Not all phones can do multicasting and some routers may filter multicast packets.
-	If you do not have multicasting, you can still fall back on connecting to computers using IPs.
-	In addition, if you phone doesn’t support multicasting, the desktop client will now serve as a multicast relay!
-	See Bugs and quirks below for a few notes on multicasting.
 
-Note on using on Mac: The app can work on Mac but OS X handles Apps slightly different and
-	I can't guarantee the app will shutdown cleanly on the Mac. Plus you will need to start
-	it from Terminal. This is on my TODO list now.
+
+You can test the multicast from the Status screen by pressing the Multicast status button and pressing "Test".
+If you receive an Incoming Call notification on the desktop program from "Multicast Test" then it works.
+
 
 INSTALLATION
 ============
-1) Download the droidnavi-1.0-release.zip from GitHub.
-	- Alternatively you can compile from the code on the hub. Please see the Repository README.md for instructions.
-2) Extract the zip into a folder.
-	- Inside you should find 2 folders. "android" and "desktop"
-3) Copy the droidnavi-android-1.0.apk to your phone and install it by running it.
-	- Note: An explanation of why certain permissions are required by the app
-		can be found in the main repository's README.md
-4) Go back to your computer and find the "desktop" folder again, run the DroidNavi.exe.
-5) You may see a popup from your firewall for a Java program. You will need to allow this 
-	in order for your phone to connect to your PC.
-6) Run the android App.
-	Note: In order for the program to work the phone and desktop must be on the same
-		network. So you will need to have Wi-Fi running on the phone.
-7) Slide to the "Pair" tab.
-8) Select "Pair with new PC"
-9) Click "Pair" on PC App.
+1) Extract the release zip.
+2) Copy the APK in the 'android' folder to you phone and run.
+	-Note: An explanation on required permissions can by found on the repository
+		README
+3) Run the desktop application. A firewall notice may show up, you will need to allow
+	this in order for the program to work.
+4) Run the android app.
+5) Click "Service Status" item to start the service.
+
+Using Multicast
+1) To use multicast and avoid having to pair with computers. First
+	look on the status screen and see if it says "Multicast Status: Available."
+2) If it shows available, next touch the item.
+3) (Make sure the desktop program is running) Next press "Test"
+4.a) If the Incoming Call "Multicast Test" appears, press yes.
+4.b) If the event did not appear, press no.
+5) If the multicast worked, then you are ready to receive notifications on calls.
+	If the multicast failed, check your router settings and see if there is a setting
+	for allowing Multicast events/broadcasts and make sure they are allowed.
+	You can re-run the test by pressing the "multicast status" item at any point.
+
+Using Pairing
+1) If the service is currently "Running" press the item and set it to "Off"
+2) To strictly use pairing, press the multicast status item and say no.
+3) Slide to the "Pair" tab.
+4) Select "Pair with new PC"
+5) Click "Pair" on PC App.
 
 Manual Input Method:
-9.1) Enter the IP on the PC in the App box.
-9.2) Hit OK
+6.1) Enter the IP on the PC in the App box.
+6.2) Hit OK
 
 QR Code:
-9.1) Use the QR Code in the app. 
+6.1) Use the QR Code in the app. 
 
-10) Slide back to the left and click the "Service Stopped" button. This will now light up and change
-	to "Service On."	
-11) If everything worked correctly, you should see a "Phone Connected" screen pop up in the bottom
+7) Slide back status and press the Service Status item again to start it "Running."	
+8) If everything worked correctly, you should see a "Phone Connected" screen pop up in the bottom
 	right hand corner of your desktop screen. You should now receive alerts when you get a call or have
 	missed calls.
 
@@ -70,10 +81,6 @@ the corner of your screen showing you the caller info.
 
 BUGS, ISSUES, QUIRKS
 ====================
-* Multicast: If your phone can do multicast but your router/network is blocking the packets. Then it won’t be possible
-	use the app at all. I’m working on a “Full Multicast Test” that will help figure out if multicast is fully 
-	supported and if not, fall back on TCP/IP. Either that or just add an option to enable/disable it.
-	If you have this issue, use v1.0 till then, functionally its identical to v1.1.
 
 * Continual Missed Call Alerts: If you have a missed call on your phone, you will continue to receive alerts
 	about the missed call until you go into Call Log on the phone and clear the status. This is not a bug.
