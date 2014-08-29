@@ -22,7 +22,7 @@ public class IpInputDialog {
 	 * @param callback An object implementing the ListEdibtable interface
 	 * @param parent An activity context
 	 */
-	static public void showDialog(final Context parent) {
+	public static void showDialog(final Context parent) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(parent);
 		builder.setTitle("Input IPv4 Address");
 		
