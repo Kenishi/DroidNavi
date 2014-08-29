@@ -184,7 +184,8 @@ public class StatusFragment extends Fragment {
 				// Set the padding using screen density
 				float scale = getResources().getDisplayMetrics().density;
 				int size = (int) (50 * scale * 0.5f);
-				this.setPadding(0, size, 0, size);
+				int padding_left = (int)(30 * scale * 0.5f);
+				this.setPadding(padding_left, size, 0, size);
 				
 				m_status = new TextView(getContext());
 				m_desc = new TextView(getContext());
