@@ -7,9 +7,9 @@ import sys
 import glob
 
 from PyQt4 import QtGui
-from py4j.java_gateway import JavaGateway, GatewayClient
+from py4j.java_gateway import JavaGateway
 from MainWindow import MainWindow
-from logging import StreamHandler, Logger, getLogger, DEBUG
+from logging import StreamHandler, getLogger, DEBUG
 
 class Launcher:
     '''
