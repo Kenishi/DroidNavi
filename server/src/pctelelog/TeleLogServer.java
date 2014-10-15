@@ -23,6 +23,24 @@ import org.apache.logging.log4j.Logger;
 
 
 public class TeleLogServer {
+	
+	public enum RESULT {
+		TCP_BIND_EXCEPTION,
+		MULTI_BIND_EXCEPTION,
+		OTHER_EXCEPTION,
+		SUCCESS;
+		
+		/**
+		 * Set the throwable cause for the current status
+		 */
+		private Throwable m_cause = null;
+		public RESULT cause(Throwable cause) {
+			this.m_cause = cause;
+			return this;
+		}
+		
+		public Throwable getCause() { return m_cause; }
+	}
 	 
 	private static final Logger logger = LogManager.getLogger(TeleLogServer.class);
 	
@@ -30,17 +48,21 @@ public class TeleLogServer {
 	public static final int MULTI_LIST_PORT = 43213;
 	
 	private DefaultChannelGroup m_pool = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-	private ChannelFuture m_serverFuture = null;
+	private ChannelFuture m_tcpFuture = null;
 	private ChannelFuture m_multiFuture = null;
+	private NioEventLoopGroup m_tcpEventLoop = new NioEventLoopGroup();
+	private NioEventLoopGroup m_multiEventLoop = new NioEventLoopGroup();
 	
-	public void start() {
+	
+	public RESULT start() {
 		logger.entry();
+		RESULT result = RESULT.SUCCESS;
 		
 		try {
 			// TCP Server
 			ServerBootstrap server = new ServerBootstrap();
 			server.channel(NioServerSocketChannel.class)
-				.group(new NioEventLoopGroup())
+				.group(m_tcpEventLoop)
 				.childHandler(new ChannelInitializer<SocketChannel>() {
 					protected void initChannel(SocketChannel ch) throws Exception {
 						m_pool.add(ch);
@@ -57,14 +79,14 @@ public class TeleLogServer {
 				.option(ChannelOption.SO_BACKLOG, 3)
 				.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
-			m_serverFuture = server.bind(TCP_LISTEN_PORT).sync();
+			m_tcpFuture = server.bind(TCP_LISTEN_PORT).sync();
 			
-			// MultiCast Server Realy
+			// MultiCast Server
 			InetSocketAddress remoteAddr = 
 					new InetSocketAddress(InetAddress.getByName("224.1.1.1"), MULTI_LIST_PORT);
 			
 			Bootstrap b = new Bootstrap();
-			b.group(new NioEventLoopGroup())
+			b.group(m_multiEventLoop)
 			 .option(ChannelOption.SO_BROADCAST, true)
 			 .option(ChannelOption.SO_REUSEADDR, true)		
 			 .option(ChannelOption.IP_MULTICAST_TTL, 2)
@@ -99,28 +121,36 @@ public class TeleLogServer {
 			
 			logger.info("Servers started.");
 			
-		} catch(Exception e) {
-			e.printStackTrace();
-			return;
+		} catch(BindException e) {
+			shutdown();
+			
+			// If the TCP side was successful then the error must have occurred on
+			// UDP multicast
+			result = (m_tcpFuture != null && m_tcpFuture.isSuccess()) ? 
+					RESULT.MULTI_BIND_EXCEPTION.cause(e) : RESULT.TCP_BIND_EXCEPTION.cause(e);
+		}
+		catch(Throwable e) {
+			shutdown();
+			result = RESULT.OTHER_EXCEPTION.cause(e);
 		} 		
-		logger.info("Exiting server loop");
-		
-		logger.exit();
+		logger.exit(result);
+		return result;
 	}
 	
+	public void shutdown() {
+		if(m_tcpFuture != null && m_tcpFuture.channel().isActive()) { m_tcpFuture.channel().close(); }
+		if(m_multiFuture != null && m_multiFuture.channel().isActive()) { m_multiFuture.channel().close(); }
+		if(!m_pool.isEmpty()) { m_pool.close(); }
+		if(!m_tcpEventLoop.isShutdown()) { m_tcpEventLoop.shutdownGracefully(); }
+		if(!m_multiEventLoop.isShutdown()) { m_multiEventLoop.shutdownGracefully(); }
+	}
 	
-	protected void addEventListener(EventListener listener) {
+	public void addEventListener(EventListener listener) {
 		EventOperator.instance().addEventListener(listener);
 	}
 	
-	protected void removeEventListener(EventListener listener) {
+	public void removeEventListener(EventListener listener) {
 		EventOperator.instance().removeEventListener(listener);
 	}
-	
-	protected void shutdown() {
-		m_serverFuture.channel().close();
-		m_multiFuture.channel().close();
-		m_pool.close();
-	}
-	
+		
 }
