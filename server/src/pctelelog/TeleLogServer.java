@@ -8,11 +8,13 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.oio.OioDatagramChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.net.*;
@@ -51,7 +53,7 @@ public class TeleLogServer {
 	private ChannelFuture m_tcpFuture = null;
 	private ChannelFuture m_multiFuture = null;
 	private NioEventLoopGroup m_tcpEventLoop = new NioEventLoopGroup();
-	private NioEventLoopGroup m_multiEventLoop = new NioEventLoopGroup();
+	private OioEventLoopGroup m_multiEventLoop = new OioEventLoopGroup();
 	
 	
 	public RESULT start() {
@@ -90,16 +92,16 @@ public class TeleLogServer {
 			 .option(ChannelOption.SO_BROADCAST, true)
 			 .option(ChannelOption.SO_REUSEADDR, true)		
 			 .option(ChannelOption.IP_MULTICAST_TTL, 2)
-			 .channelFactory(new ChannelFactory<NioDatagramChannel>() {
+			 .channelFactory(new ChannelFactory<OioDatagramChannel>() {
 				 @Override
-				public NioDatagramChannel newChannel() {
-					NioDatagramChannel ch = new NioDatagramChannel(InternetProtocolFamily.IPv4);
+				public OioDatagramChannel newChannel() {
+					OioDatagramChannel ch = new OioDatagramChannel();
 					return ch;
 				}
 			});
-			b.handler(new ChannelInitializer<NioDatagramChannel>() {
+			b.handler(new ChannelInitializer<OioDatagramChannel>() {
 				@Override
-				protected void initChannel(NioDatagramChannel ch) throws Exception {
+				protected void initChannel(OioDatagramChannel ch) throws Exception {
 					ch.pipeline().addFirst(new PacketHandler());
 					ch.pipeline().addLast(new MulticastInbound());
 				}
@@ -113,8 +115,9 @@ public class TeleLogServer {
 			Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
 			while(nics.hasMoreElements()) {
 				NetworkInterface nic = nics.nextElement();
-				if(nic.isUp() && !nic.isVirtual())
+				if(nic.isUp() && !nic.isVirtual()) {
 					ch.joinGroup(remoteAddr, nic);
+				}
 			}
 			
 			EventOperator.instance().setMultiCast(ch); // Set multi in order to relay TCP events
@@ -138,11 +141,28 @@ public class TeleLogServer {
 	}
 	
 	public void shutdown() {
-		if(m_tcpFuture != null && m_tcpFuture.channel().isActive()) { m_tcpFuture.channel().close(); }
-		if(m_multiFuture != null && m_multiFuture.channel().isActive()) { m_multiFuture.channel().close(); }
-		if(!m_pool.isEmpty()) { m_pool.close(); }
-		if(!m_tcpEventLoop.isShutdown()) { m_tcpEventLoop.shutdownGracefully(); }
-		if(!m_multiEventLoop.isShutdown()) { m_multiEventLoop.shutdownGracefully(); }
+		logger.entry();
+		if(m_tcpFuture != null && m_tcpFuture.channel().isActive()) {
+			m_tcpFuture.channel().close();
+			logger.debug("TCP server shutdown");
+		}
+		if(m_multiFuture != null && m_multiFuture.channel().isActive()) {
+			m_multiFuture.channel().close();
+			logger.debug("UDP socket shutdown");
+		}
+		if(!m_pool.isEmpty()) {
+			m_pool.close();
+			logger.debug("TCP Sockets closed");
+		}
+		if(!m_tcpEventLoop.isShutdown()) {
+			m_tcpEventLoop.shutdownGracefully();
+			logger.debug("TCP Event loop shutdown");
+		}
+		if(!m_multiEventLoop.isShutdown()) {
+			m_multiEventLoop.shutdownGracefully();
+			logger.debug("UDP Event loop shutdown");
+		}
+		logger.exit();
 	}
 	
 	public void addEventListener(EventListener listener) {
