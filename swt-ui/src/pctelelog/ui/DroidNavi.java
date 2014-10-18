@@ -20,6 +20,8 @@ public class DroidNavi {
 	private final Display m_display;
 	
 	public DroidNavi(boolean resetPref) {
+		logger.entry();
+		logger.debug("Starting UI");
 		m_server = startServer();
 		
 		Display.setAppName("Droid Navi");
@@ -66,7 +68,14 @@ public class DroidNavi {
 		if(m_server != null) {
 			m_server.shutdown();
 			m_server = null;
+			logger.debug("Shutdown called on server");
 		}
+		else {
+			logger.debug("Shutdown not called on Server");
+		}
+		
+		logger.exit();
+		System.exit(0);
 	}
 	
 	public static void main(String[] args) {
@@ -125,6 +134,7 @@ public class DroidNavi {
 	 */
 	private void showUnknownException(MainWindow main, RESULT result) {
 		MessageBox msg = new MessageBox(main.getWindowShell(), SWT.ICON_ERROR | SWT.OK);
+		logger.error("Unknown", result.getCause());
 		msg.setMessage("Unknown exception occured during startup.\n\n" + result.getCause().getClass().getName() +
 				"\n" + result.getCause().getMessage());
 		msg.setText("Error");
