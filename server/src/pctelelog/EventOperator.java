@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.HeartBeatEvent;
-import py4j.Py4JException;
 
 public class EventOperator {
 	
@@ -80,12 +79,7 @@ public class EventOperator {
 		
 		if(event != null) {
 			for(EventListener listener : m_listeners) {
-				try {
-					listener.onEvent(event);
-				} catch(Py4JException e) {
-					logger.catching(e);
-					continue;
-				}
+				listener.onEvent(event);
 			}
 		}
 	}
