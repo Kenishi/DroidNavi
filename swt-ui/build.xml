@@ -1,0 +1,23 @@
+<project name="DroidNavi-SWT" default="bundle" basedir=".">
+	<description>
+		Bundle the final jar into a Mac app
+	</description>
+
+<target name="bundle">
+
+	<jarbundler
+	dir="target" 
+	name="DroidNavi" 
+	version="1.2"
+	mainclass="pctelelog.ui.DroidNavi" 
+	jvmversion="1.6+"
+	jar="${jar.filename}"
+	icon="res/logo.icns"
+	startOnMainThread="true"
+	vmoptions="-d64"
+	copyright="LGPL v2"
+	/>
+	
+</target>
+
+</project>
