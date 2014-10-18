@@ -7,7 +7,7 @@
   <parent>
     <groupId>droidnavi</groupId>
     <artifactId>droidnavi</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
   </parent>
   
   <artifactId>distribution</artifactId>
@@ -25,35 +25,24 @@
   <dependencies>
     <dependency>
       <groupId>droidnavi</groupId>
-      <artifactId>droidnavi-pyqt-ui</artifactId>
-      <version>1.1</version>
+      <artifactId>droidnavi-swt-ui</artifactId>
+      <version>1.2</version>
 	  <classifier>distribution</classifier>
-	  <type>zip</type>
+	  <type>jar</type>
     </dependency>
   </dependencies>
-
   <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-		<configuration>
-			<finalName>droidnavi-${pom.version}</finalName>
-		</configuration>
-        <executions>
-          <execution>
-            <id>distro-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-			  <descriptors>
-                <descriptor>../bin.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-		</executions>
-      </plugin>
-    </plugins>
+  	<plugins>
+  		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-shade-plugin</artifactId>
+			<configuration>
+				<shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
+				<shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
+			</configuration>		
+		</plugin>
+	</plugins>
   </build>
+
+
 </project>
