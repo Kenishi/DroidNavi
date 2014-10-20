@@ -7,22 +7,18 @@
 	<groupId>droidnavi</groupId>
     <artifactId>droidnavi</artifactId>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Droid Navi</name>
 	
 	<modules>
 		<module>server</module>
-		<module>pyqt-ui</module>
+		<module>swt-ui</module>
 		<module>distribution</module>
 	</modules>
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.1</version>
-				</plugin>
+<!-- 
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.4</version>
@@ -31,7 +27,8 @@
 						<descriptor>bin.xml</descriptor>
 					</descriptors>
 					</configuration>
-				</plugin>	
+				</plugin>
+ -->	
 			</plugins>
 		</pluginManagement>
 	</build>

@@ -26,20 +26,30 @@
     <dependency>
       <groupId>droidnavi</groupId>
       <artifactId>droidnavi-swt-ui</artifactId>
-      <version>1.2</version>
+      <version>${project.parent.version}</version>
 	  <classifier>distribution</classifier>
 	  <type>jar</type>
     </dependency>
   </dependencies>
   <build>
   	<plugins>
-  		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-shade-plugin</artifactId>
+		<plugin>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<version>2.4</version>
 			<configuration>
-				<shadedArtifactAttached>true</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
-				<shadedClassifierName>shaded</shadedClassifierName> <!-- set the suffix to the shaded jar -->
-			</configuration>		
+				<descriptors>
+					<descriptor>bin.xml</descriptor>
+				</descriptors>
+			</configuration>
+			<executions>
+				<execution>
+					<id>assemble</id>
+					<goals>
+						<goal>single</goal>
+					</goals>
+					<phase>package</phase>
+				</execution>
+			</executions>
 		</plugin>
 	</plugins>
   </build>

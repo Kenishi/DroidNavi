@@ -184,7 +184,7 @@
 		<dependency>
 			<groupId>droidnavi</groupId>
 			<artifactId>droidnavi-gateway-server</artifactId>
-			<version>1.2</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
