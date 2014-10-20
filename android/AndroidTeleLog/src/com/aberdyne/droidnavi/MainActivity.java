@@ -81,6 +81,7 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * Called when Barcode Scanner completes scanning. Adds IP to pairing.
 	 */
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		IntentResult scanResult = 
 				IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);

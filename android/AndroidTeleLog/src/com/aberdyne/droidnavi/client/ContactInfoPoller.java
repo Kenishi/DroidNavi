@@ -16,6 +16,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 import android.util.Base64;
@@ -68,7 +69,7 @@ public class ContactInfoPoller {
 		cursor = context.getContentResolver().query(contactUri,
 				new String[] { ContactsContract.Contacts.DISPLAY_NAME,
 								ContactsContract.Contacts.PHOTO_ID,
-								PhoneLookup._ID },
+								BaseColumns._ID },
 		null, null, null);
 		
 		/* Defaults */
@@ -83,7 +84,7 @@ public class ContactInfoPoller {
 			String displayName = cursor.getString(nameIdx);
 			
 			// Get Contact ID
-			int contactidIdx = cursor.getColumnIndex(PhoneLookup._ID);
+			int contactidIdx = cursor.getColumnIndex(BaseColumns._ID);
 			long contactId = cursor.getLong(contactidIdx);
 			
 			// Get Photo ID

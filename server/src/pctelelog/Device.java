@@ -38,6 +38,7 @@ public class Device {
 		return m_ip;
 	}
 	
+	@Override
 	public String toString() {
 		String name = "";
 		String ip = "";

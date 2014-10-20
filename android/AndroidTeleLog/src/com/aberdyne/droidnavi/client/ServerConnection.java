@@ -94,13 +94,14 @@ public class ServerConnection implements Comparable<String> {
 	}
 	
 	public int compareTo(String another) {
-		return this.toString().compareTo((String)another);
+		return this.toString().compareTo(another);
 	}
 	
 	/**
 	 * This is not a deep equals of the object.
 	 * The method will compare the *STRING* Ips of the two objects ONLY. 
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if(o == null) {
 			return false;

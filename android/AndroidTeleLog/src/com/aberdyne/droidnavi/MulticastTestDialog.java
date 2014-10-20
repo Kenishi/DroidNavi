@@ -47,7 +47,7 @@ public class MulticastTestDialog {
 		
 		AlertDialog alert = builder.create();
 		alert.show();
-		alert.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+		alert.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
 				fireMulticastTest();

@@ -346,6 +346,7 @@ public class EventDispatchThread extends Thread implements ServerListListener {
 		public CheckServerThread(Thread parent) {
 			m_parent = parent;
 		}
+		@Override
 		public void run() {
 			checkServers();
 			

@@ -10,9 +10,7 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
-import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioDatagramChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -66,6 +64,7 @@ public class TeleLogServer {
 			server.channel(NioServerSocketChannel.class)
 				.group(m_tcpEventLoop)
 				.childHandler(new ChannelInitializer<SocketChannel>() {
+					@Override
 					protected void initChannel(SocketChannel ch) throws Exception {
 						m_pool.add(ch);
 						ch.pipeline().addFirst(new PacketHandler());

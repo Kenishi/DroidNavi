@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 public class PreferenceStore {
@@ -34,7 +35,7 @@ public class PreferenceStore {
 		if(serverIp == null) return false;
 		
 		// Get the current serverIps or create a new one if it doesn't exist
-		SharedPreferences pref = m_parent.getPreferences(Activity.MODE_PRIVATE);
+		SharedPreferences pref = m_parent.getPreferences(Context.MODE_PRIVATE);
 		Set<String> set = pref.getStringSet(PREF_SERVER_LIST, null);
 		set = (set == null) ? new TreeSet<String>() : set;
 		try {
@@ -58,7 +59,7 @@ public class PreferenceStore {
 	public synchronized void removeServer(String serverIp) {
 		if(serverIp == null) return;
 		
-		SharedPreferences pref = m_parent.getPreferences(Activity.MODE_PRIVATE);
+		SharedPreferences pref = m_parent.getPreferences(Context.MODE_PRIVATE);
 		Set<String> set = pref.getStringSet(PREF_SERVER_LIST, null);
 		if(set != null) {
 			set.remove(serverIp);
@@ -75,7 +76,7 @@ public class PreferenceStore {
 	 * @return An array of string IPs
 	 */
 	public ArrayList<String> getServerList() {
-		SharedPreferences pref = m_parent.getPreferences(MainActivity.MODE_PRIVATE);
+		SharedPreferences pref = m_parent.getPreferences(Context.MODE_PRIVATE);
 		Set<String> serverSet = pref.getStringSet(PREF_SERVER_LIST, null);
 		if(serverSet == null) {
 			return null;

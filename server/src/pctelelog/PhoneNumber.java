@@ -19,6 +19,7 @@ public class PhoneNumber {
 		return m_number;
 	}
 	
+	@Override
 	public String toString() {
 		/*
 		 * Returns the phone number as a hyphenated phone number

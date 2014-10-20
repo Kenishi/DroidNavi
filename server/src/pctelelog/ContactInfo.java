@@ -57,6 +57,7 @@ public class ContactInfo {
 		return m_photo;
 	}
 	
+	@Override
 	public String toString() {
 		String str = m_name.toString() + "\n" +
 				m_number.toString() +"\n" +
@@ -130,6 +131,7 @@ public class ContactInfo {
 			return m_email;
 		}
 		
+		@Override
 		public String toString() {
 			return m_email;
 		}
@@ -198,6 +200,7 @@ public class ContactInfo {
 			return m_last;
 		}
 		
+		@Override
 		public String toString() {
 			return getDisplayName() + "(" +getFirst() + " " + getLast() + ")";
 		}

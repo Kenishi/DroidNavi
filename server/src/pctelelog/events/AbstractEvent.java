@@ -61,6 +61,7 @@ public abstract class AbstractEvent {
 		return m_time;
 	}
 	
+	@Override
 	public String toString() {
 		return 	m_eventType.toString() + ": " +
 				m_time.toString();

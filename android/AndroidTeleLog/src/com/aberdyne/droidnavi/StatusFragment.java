@@ -17,11 +17,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.FragmentManager;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -178,8 +177,8 @@ public class StatusFragment extends Fragment {
 			private StatusView(Context context) {
 				super(context);
 								
-				this.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 
-																	ListView.LayoutParams.MATCH_PARENT));
+				this.setLayoutParams(new ListView.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
+																	android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 				this.setOrientation(LinearLayout.VERTICAL);
 				
 				// Set the padding using screen density
@@ -214,7 +213,7 @@ public class StatusFragment extends Fragment {
 				int start = full.indexOf(color_text);
 				int end = full.length();
 				Spannable span = new SpannableString(start_text + color_text);
-				span.setSpan(new ForegroundColorSpan(color), start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+				span.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 				
 				return span;
 			}
@@ -286,6 +285,7 @@ public class StatusFragment extends Fragment {
 				super(context,"Toggle sending events to PC");
 			}
 			
+			@Override
 			public void update() {
 				update(CallMonitorService.isRunning());
 			}
