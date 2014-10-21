@@ -63,7 +63,6 @@ public class MulticastSender extends AsyncTask<AbstractEvent, Void, Boolean>{
 				try {
 					Thread.sleep(10);
 				} catch(InterruptedException e){}
-				logger.debug("PACKETSENT:" + packet.getId() + ": " + (packet.getSequence()+1) + "/" + packet.getMaxSequency());
 			}
 			
 			
