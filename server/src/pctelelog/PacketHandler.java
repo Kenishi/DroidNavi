@@ -12,7 +12,9 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.Set;
-import java.util.Vector;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import pctelelog.events.AbstractEvent;
 
@@ -24,9 +26,11 @@ import pctelelog.events.AbstractEvent;
  *
  */
 public class PacketHandler extends ChannelInboundHandlerAdapter {
+	private final Logger logger = LogManager.getLogger(PacketHandler.class);
+	
 	private final int PRUNE_TIME = 5 * (60 * 1000); // 5 minutes
 	
-	private Hashtable<Long, Vector<Packet>> packets = new Hashtable<Long, Vector<Packet>>();
+	private Hashtable<Long, PacketSet> packets = new Hashtable<Long, PacketSet>();
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
@@ -43,11 +47,13 @@ public class PacketHandler extends ChannelInboundHandlerAdapter {
 		
 		// Start building the event
 		Packet packet = Packet.deserialize(data);
+		logger.debug("PACKET: " + packet.getId() + ":" + (packet.getSequence()+1) + "/" + packet.getMaxSequency());
 		AbstractEvent event = rebuild(packet);
 		if(event != null) {
 			InetAddress remote = getSenderAddress(ctx, msg);
 			event = EventDeviceResolver.resolveDevice(remote, event);
 			ctx.fireChannelRead(event);
+			logger.debug("Event Fired: " + event.toString());
 		}
 		ReferenceCountUtil.release(msg);
 	}
@@ -83,8 +89,10 @@ public class PacketHandler extends ChannelInboundHandlerAdapter {
 		Set<Long> ids = packets.keySet();
 		for(Long id : ids) {
 			long diff = time - id.longValue();
-			if(diff > PRUNE_TIME)
+			if(diff > PRUNE_TIME) {
 				remove(id);
+				logger.debug("Pruned: " + id);
+			}
 		}
 	}
 	
@@ -109,14 +117,18 @@ public class PacketHandler extends ChannelInboundHandlerAdapter {
 				e.printStackTrace();
 			}
 		}
-		else if(packets.contains(id)) {
+		else if(packets.containsKey(id)) {
 			put(id, packet);
 			
 			// Check if we have all packets
 			if(packets.get(id).size() == packet.getMaxSequency()) {
+				logger.debug("Rebuild Event");
 				// Rebuild and return Event
 				ByteBuffer buffer = ByteBuffer.allocate((int)Packet.DATA_SPLIT * packet.getMaxSequency());
-				for(Packet p : packets.get(id)) {
+				PacketSet set = packets.get(id);
+				for(int i=0; i < set.size(); i++) {
+					Packet p = set.get(i);
+					logger.debug("Packet " + p.getSequence() + "=" + p.getData());
 					buffer.put(p.getData());
 				}
 				
@@ -131,14 +143,23 @@ public class PacketHandler extends ChannelInboundHandlerAdapter {
 			}
 		}
 		else {
+			logger.debug("Add to set");
 			put(id, packet);
 		}
 		return null;
 	}
 	
 	private void put(Long id, Packet packet) {
-		Vector<Packet> pack = packets.contains(id) ? packets.get(id) : new Vector<Packet>(packet.getMaxSequency()); 
+		PacketSet pack;
+		if(packets.containsKey(id)) {
+			pack = packets.get(id); 
+		}
+		else {
+			logger.debug("Creating new packet set for id: " + id);
+			pack = new PacketSet(packet.getMaxSequency());
+		}
 		pack.add(packet.getSequence(), packet);
+		logger.debug("ADD Packet Set("+ id+ "): " + (packet.getSequence()+1) + "/" + packet.getMaxSequency() );
 		packets.put(id, pack);
 	}
 	
