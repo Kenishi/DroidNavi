@@ -91,6 +91,7 @@ public class TeleLogServer {
 			 .option(ChannelOption.SO_BROADCAST, true)
 			 .option(ChannelOption.SO_REUSEADDR, true)		
 			 .option(ChannelOption.IP_MULTICAST_TTL, 2)
+			 .option(ChannelOption.SO_RCVBUF, 1048576)
 			 .channelFactory(new ChannelFactory<OioDatagramChannel>() {
 				 @Override
 				public OioDatagramChannel newChannel() {
