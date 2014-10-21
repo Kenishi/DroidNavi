@@ -1,6 +1,9 @@
 package pctelelog.ui.notify;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
+
 import pctelelog.EventListener;
 import pctelelog.events.AbstractCallEvent;
 import pctelelog.events.AbstractEvent;
@@ -9,7 +12,8 @@ import pctelelog.events.IncomingCallEvent;
 import pctelelog.events.MissedCallEvent;
 
 public class EventHandler implements EventListener {
-		
+	private final Logger logger = LogManager.getLogger(EventHandler.class);
+	
 	private final Display m_display;
 	
 	public EventHandler(Display display) {
@@ -26,6 +30,7 @@ public class EventHandler implements EventListener {
 	}
 	
 	private void handleEvent(AbstractEvent event) {
+		logger.entry(event);
 		if(event instanceof ClientConnectEvent) {
 			connect(event);
 		}
@@ -34,19 +39,24 @@ public class EventHandler implements EventListener {
 			incomingCall(cast);
 		}
 		else if(event instanceof MissedCallEvent) {
-			missedCall(event);
-		}		
+			AbstractCallEvent cast = (AbstractCallEvent)event;
+			missedCall(cast);
+		}
+		logger.exit();
 	}
 		
 	private void incomingCall(AbstractCallEvent event) {
-		EventWindow eventWindow = EventWindow.incoming(getMainDisplay(), event);
+		EventWindow eventWindow = EventWindow.call(getMainDisplay(), event);
 		
 		EventWindowEffect effect = eventWindow.getEffect();
 		show(effect);
 	}
 	
-	private void missedCall(AbstractEvent event) {
+	private void missedCall(AbstractCallEvent event) {
+		EventWindow eventWindow = EventWindow.call(getMainDisplay(), event);
 		
+		EventWindowEffect effect = eventWindow.getEffect();
+		show(effect);
 	}
 	
 	private void connect(AbstractEvent event) {			

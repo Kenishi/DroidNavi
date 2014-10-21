@@ -92,7 +92,13 @@ public class EventWindow implements WindowWidget, DisposeListener {
 		return eventWindow;
 	}
 	
-	public static EventWindow incoming(Display display, AbstractCallEvent event) {
+	/**
+	 * Create an event window for a call type event
+	 * @param display the main display loop
+	 * @param event the event to show
+	 * @return an instantiated EventWindow
+	 */
+	public static EventWindow call(Display display, AbstractCallEvent event) {
 		EventWindow eventWindow = new EventWindow(display , true);
 		
 		// Set size and location
