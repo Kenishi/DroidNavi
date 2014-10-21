@@ -185,7 +185,7 @@ public class ContactInfoPoller {
 	    	
 	    	try {
 		    	int size = input.available();
-		    	logger.debug("PHOTO: size {{", Integer.toString(size));
+		    	logger.debug("PHOTO: size {}", Integer.toString(size));
 		    	
 		    	data = new byte[size];
 				input.read(data);
