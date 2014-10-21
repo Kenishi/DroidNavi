@@ -225,9 +225,11 @@ public class StatusFragment extends Fragment {
 		 *
 		 */
 		class MulticastStatusView extends StatusView {
+			NetworkDispatch dispatch = null;
 			
 			public MulticastStatusView(Context context) {
 				super(context, "Click to test multicast network availability");
+				dispatch = new NetworkDispatch(context);
 			}
 
 			@Override
@@ -240,7 +242,7 @@ public class StatusFragment extends Fragment {
 			}
 
 			protected int getStatusColor() {
-				if(MulticastSender.checkMulticastAvailability()) {
+				if(dispatch.hasMulticast()) {
 					SharedPreferences pref = getContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
 
 					if(pref.getBoolean(NetworkDispatch.MULTI_IS_NETWORK_TESTED_SETTING, false)) {
@@ -256,7 +258,7 @@ public class StatusFragment extends Fragment {
 			}
 
 			protected String getStatusText() {
-				if(MulticastSender.checkMulticastAvailability()) {
+				if(dispatch.hasMulticast()) {
 					SharedPreferences pref = getContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
 					
 					if(pref.getBoolean(NetworkDispatch.MULTI_IS_NETWORK_TESTED_SETTING, false)) {

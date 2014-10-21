@@ -20,18 +20,15 @@ public class NetworkDispatch {
 	}
 	
 	public boolean hasMulticast() {
-		if(MulticastSender.checkMulticastAvailability()) {
-			SharedPreferences pref = m_context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-			if(pref.getBoolean(MULTI_IS_NETWORK_TESTED_SETTING, false)) {
-				boolean result = pref.getBoolean(MULTI_NETWORK_TEST_RESULT_SETTING, false);
-				return result;
-			}
-			else {
-				return true;
-			}
+		// Check if we have tested multicast before
+		SharedPreferences pref = m_context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+		if(pref.getBoolean(MULTI_IS_NETWORK_TESTED_SETTING, false)) {
+			// If we have then return the result of that
+			boolean result = pref.getBoolean(MULTI_NETWORK_TEST_RESULT_SETTING, false);
+			return result;
 		}
 		else {
-			return false;
+			return MulticastSender.checkMulticastAvailability();
 		}
 	}
 	
