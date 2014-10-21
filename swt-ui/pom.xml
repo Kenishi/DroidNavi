@@ -92,6 +92,12 @@
 					<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
 					<version>4.4</version>
 				</dependency>
+				<dependency>
+					<groupId>jarbundler</groupId>
+					<artifactId>jarbundler</artifactId>
+					<version>2.3.1</version>
+					<scope>provided</scope>
+				</dependency>
 			</dependencies>
 			<build>
 				<plugins>
@@ -128,12 +134,19 @@
 					<family>window</family>
 				</os>
 			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+					<version>4.4</version>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>com.akathist.maven.plugins.launch4j</groupId>
 						<artifactId>launch4j-maven-plugin</artifactId>
-						<version>1.7-SNAPSHOT</version>
+						<version>1.7</version>
 						<executions>
 							<execution>
 								<id>droidnavi-gui</id>
@@ -157,14 +170,17 @@
 										<maxHeapSize>768</maxHeapSize>
 									</jre>
 									<versionInfo>
-										<fileVersion>1.2</fileVersion>
-										<txtFileVersion>1.2</txtFileVersion>
+										<fileVersion>1.2.0.0</fileVersion>
+										<txtFileVersion>1.2.0.0</txtFileVersion>
 										<fileDescription>Receive notifications about calls from phones running Droid Navi.</fileDescription>
 										<copyright>LGPL 2</copyright>
-										<productVersion>1.2</productVersion>
-										<txtProductVersion>1.2</txtProductVersion>
-										<productName>Droid Navi</productName>
+										<productVersion>1.2.0.0</productVersion>
+										<txtProductVersion>1.2.0.0</txtProductVersion>
 										<companyName>Aberdyne</companyName>
+										<productName>Droid Navi</productName>
+										<internalName>Droid Navi</internalName>
+										<originalFilename>droidnavi.exe</originalFilename>
+										
 									</versionInfo>
 								</configuration>
 							</execution>
@@ -175,12 +191,6 @@
 		</profile>
 	</profiles>
 	<dependencies>
-		<dependency>
-			<groupId>jarbundler</groupId>
-			<artifactId>jarbundler</artifactId>
-			<version>2.3.1</version>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>droidnavi</groupId>
 			<artifactId>droidnavi-gateway-server</artifactId>
