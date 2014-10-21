@@ -22,9 +22,6 @@ public class NonActiveServerConnection extends ServerConnection {
 	public boolean sendEvent(AbstractEvent event) { return false; }
 	
 	@Override
-	public boolean sendEvent(String json) { return false; }
-
-	@Override
 	public void shutdown(boolean sendShutDownEvent) {}
 	
 	

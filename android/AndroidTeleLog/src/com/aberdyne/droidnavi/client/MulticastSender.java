@@ -16,14 +16,14 @@ import pctelelog.TeleLogServer;
 import pctelelog.events.AbstractEvent;
 import pctelelog.events.HeartBeatEvent;
 
-public class MulticastSender extends AsyncTask<String, Void, Boolean>{
+public class MulticastSender extends AsyncTask<AbstractEvent, Void, Boolean>{
 	private static final Logger logger = LoggerFactory.getLogger(MulticastSender.class);
 	
 	private static final int PORT = TeleLogServer.MULTI_LIST_PORT;
 	
 	@Override
-	protected Boolean doInBackground(String...json) {
-		boolean result = sendEvent(json[0]);
+	protected Boolean doInBackground(AbstractEvent...event) {
+		boolean result = dispatchEvent(event[0]);
 		return Boolean.valueOf(result);
 	}
 	
@@ -32,34 +32,27 @@ public class MulticastSender extends AsyncTask<String, Void, Boolean>{
 	}
 	
 	public static boolean sendEvent(AbstractEvent event) {
+		
 		try {
-			String json = EventSerializer.serialize(event);
-			String[] out = {json};
-			
-			try {
-				return new MulticastSender().execute(out).get().booleanValue();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
-		} catch (IOException e) {
-			logger.error("Failed to serialize event.");
+			return new MulticastSender().execute(event).get().booleanValue();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	private static boolean sendEvent(String json) {
+	private static boolean dispatchEvent(AbstractEvent event) {
 		try {
 			MulticastSocket socket = new MulticastSocket(PORT);
 			InetAddress sessAddr = InetAddress.getByName("224.1.1.1");
-			socket.setTimeToLive(2);
+			socket.setTimeToLive(5);
 						
-			Packet[] packets = Packet.createPackets(json);
+			Packet[] packets = Packet.createPackets(event);
 			for(Packet packet : packets) {
 				byte[] data = packet.serialize();
 				// Build Packet
@@ -68,6 +61,10 @@ public class MulticastSender extends AsyncTask<String, Void, Boolean>{
 				
 				// Broadcast
 				socket.send(d_pack);
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException e){}
+				logger.debug("PACKETSENT:" + packet.getId() + ": " + (packet.getSequence()+1) + "/" + packet.getMaxSequency());
 			}
 			
 			

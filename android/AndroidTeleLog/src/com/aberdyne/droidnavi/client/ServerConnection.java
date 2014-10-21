@@ -199,33 +199,16 @@ public class ServerConnection implements Comparable<String> {
 	 */
 	public boolean sendEvent(AbstractEvent event) {
 		if(m_isActiveSocket) {
-			try {
-				return sendEvent(EventSerializer.serialize(event));
-			} catch (Exception e) { // Serialize failed
-				e.printStackTrace();
-				return false;
-			}
+			return sendEvent(m_server, event);
 		}
 		else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Send the event, packaged in JSON, to the waiting server
-	 * 
-	 * If the connection is not set up, the method will attempt
-	 * 	to connect to the computer and then send the event.
-	 * @param json an event serialized into a JSON string
-	 * @return True if no problems occurred while sending, False otherwise.
-	 */
-	public boolean sendEvent(String json) {
-		if(m_isStandby) { // If on standby try to connect
-			if(!connect()) {
-				return false;
+			if(m_isStandby) { // If on standby try to connect
+				if(!connect()) {
+					return false;
+				}
 			}
+			return sendEvent(m_server, event);
 		}
-		return sendEvent(m_server, json);
 	}
 	
 	/**
@@ -235,15 +218,16 @@ public class ServerConnection implements Comparable<String> {
 	 * @param json The serialized event to send
 	 * @return True if successful, False otherwise.
 	 */
-	private synchronized boolean sendEvent(Socket server, String json) {
+	private synchronized boolean sendEvent(Socket server, AbstractEvent event) {
 		logger.trace("ENTRY ServerConnection.sendEvent");
-		logger.debug("Server: {} JSON: {}", server, json);
+		
 		assert server != null;
+		
 		if(server.isConnected() &&
 				!server.isOutputShutdown()) {
 			try {
 				logger.info("Writing bytes");
-				Packet[] packets = Packet.createPackets(json);
+				Packet[] packets = Packet.createPackets(event);
 				for(Packet packet: packets) {
 					server.getOutputStream().write(packet.serialize());
 				}
@@ -381,8 +365,7 @@ public class ServerConnection implements Comparable<String> {
 			logger.info("Received: " + event.toString());
 			if(event instanceof HelloEvent) {
 				// Send Hello
-				String reply = EventSerializer.serialize(new HelloEvent(new Date()));
-				sendEvent(server, reply);
+				sendEvent(server, new HelloEvent(new Date()));
 				logger.info("Handshake PASS");
 				logger.trace("EXIT ServerConnection.handshake: {}", Boolean.TRUE);
 				return true;
