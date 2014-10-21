@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.os.AsyncTask;
-import pctelelog.EventSerializer;
 import pctelelog.Packet;
 import pctelelog.TeleLogServer;
 import pctelelog.events.AbstractEvent;
