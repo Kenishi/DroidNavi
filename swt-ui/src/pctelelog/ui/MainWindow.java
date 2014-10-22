@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import pctelelog.TeleLogServer;
@@ -41,7 +42,7 @@ public class MainWindow implements WindowWidget, DisposeListener {
 		}
 		
 		m_mainDisplay = display;
-		m_windowShell = new Shell(getMainDisplay(), SWT.SHELL_TRIM);
+		m_windowShell = new Shell(getMainDisplay());
 		m_server = server;
 		m_eventHandler = new EventHandler(getMainDisplay());
 		
@@ -132,8 +133,15 @@ public class MainWindow implements WindowWidget, DisposeListener {
 	private void initMenu() {
 		Shell windowShell = getWindowShell();
 		
+		// Initialize menu bar based on OS
+		initMenuBar();
+		
 		// Menu bar
-		Menu menuBar = getMainDisplay().getMenuBar();
+		Menu menuBar = getWindowShell().getMenuBar();
+		
+		if(menuBar == null) {
+			getWindowShell().dispose();
+		}
 		
 		// File
 		MenuItem menuBar_File = new MenuItem(menuBar, SWT.CASCADE);
@@ -228,6 +236,16 @@ public class MainWindow implements WindowWidget, DisposeListener {
 				new TrayIcon(getMainDisplay(), mw);
 			}
 		});
+	}
+	
+	private void initMenuBar() {	
+		if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+			// Do nothing, OS supplies menu bar
+		}
+		else {
+			Menu menu = new Menu(getWindowShell(), SWT.BAR);
+			getWindowShell().setMenuBar(menu);
+		}
 	}
 	
 	/**

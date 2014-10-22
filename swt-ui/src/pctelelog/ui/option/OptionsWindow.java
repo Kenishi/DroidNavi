@@ -91,12 +91,17 @@ public class OptionsWindow implements WindowWidget, SelectionListener {
 	private void initLayout() {
 		GridLayout layout = new GridLayout(1, true);
 		layout.marginBottom = 0;
-		layout.verticalSpacing = -5;
+		
+		if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+			// Pull buttons up closer to frame
+			layout.verticalSpacing = -5;
+		}
+		
 		getWindowShell().setLayout(layout);
 	}
 	
 	private void initTabFolder() {
-		TabFolder tabFolder = new TabFolder(getWindowShell(), SWT.BORDER);
+		TabFolder tabFolder = new TabFolder(getWindowShell(), SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		
 		m_event = new OptionEvent(tabFolder);

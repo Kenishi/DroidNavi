@@ -115,7 +115,7 @@ public class OptionEffect implements OptionInterface {
 	
 	private Composite initMainGroup(TabFolder folder) {
 		// Set Tab Item Group
-		Composite mainGroup = new Composite(m_parentFolder, SWT.NO_FOCUS);
+		Composite mainGroup = new Composite(m_parentFolder, SWT.NONE);
 		mainGroup.setToolTipText("Set how the notification window shows");
 		
 		// Set Tab Group Layout
@@ -133,7 +133,7 @@ public class OptionEffect implements OptionInterface {
 		txtLabel.setToolTipText("Set how long notifications are shown for");
 		txtLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
-		m_txtShowTime = new Text(group, SWT.SINGLE);
+		m_txtShowTime = new Text(group, SWT.SINGLE | SWT.BORDER);
 		String defTxt = (String)PreferenceManager.getPreferenceManager().get(PreferenceKey.SHOW_TIME, "4000");
 		m_txtShowTime.setText(defTxt);
 		m_txtShowTime.setToolTipText("Set how long notifications are shown for");
@@ -160,7 +160,7 @@ public class OptionEffect implements OptionInterface {
 	}
 	
 	private void initEffectGroup(Composite group) {
-		Group effectGroup = new Group(group, SWT.BORDER);
+		Group effectGroup = new Group(group, SWT.NONE);
 		effectGroup.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		effectGroup.setText("Type");
 		effectGroup.setToolTipText("Set the type of effect");
@@ -205,7 +205,7 @@ public class OptionEffect implements OptionInterface {
 	}
 	
 	private void initPositionGroup(Composite group) {
-		Group positionGroup = new Group(group, SWT.BORDER);
+		Group positionGroup = new Group(group, SWT.NONE);
 		positionGroup.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		positionGroup.setText("Position");
 		positionGroup.setToolTipText("Set the location of the notification window");
