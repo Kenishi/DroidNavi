@@ -133,11 +133,8 @@ public class MainWindow implements WindowWidget, DisposeListener {
 	private void initMenu() {
 		Shell windowShell = getWindowShell();
 		
-		// Initialize menu bar based on OS
-		initMenuBar();
-		
 		// Menu bar
-		Menu menuBar = getWindowShell().getMenuBar();
+		Menu menuBar = getMenuBar();
 		
 		if(menuBar == null) {
 			getWindowShell().dispose();
@@ -238,14 +235,16 @@ public class MainWindow implements WindowWidget, DisposeListener {
 		});
 	}
 	
-	private void initMenuBar() {	
+	private Menu getMenuBar() {
+		Menu menubar = null;
 		if(System.getProperty("os.name").toLowerCase().contains("mac")) {
-			// Do nothing, OS supplies menu bar
+			menubar = getMainDisplay().getMenuBar();
 		}
 		else {
-			Menu menu = new Menu(getWindowShell(), SWT.BAR);
-			getWindowShell().setMenuBar(menu);
+			menubar = new Menu(getWindowShell(), SWT.BAR);
+			getWindowShell().setMenuBar(menubar);
 		}
+		return menubar;
 	}
 	
 	/**
