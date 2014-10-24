@@ -78,8 +78,8 @@ public class AboutWindow implements WindowWidget, DisposeListener {
 			"Libraries in use:\n" +
 			"Jackson JSON Processor 1.9.13\n" +
 			"Standard Widget Toolkti (SWT) 4.4\n" +
-			"QRGen 1.4" + 
-			"Zxing Java Core 3.0" +
+			"QRGen 1.4\n" + 
+			"Zxing Java Core 3.0\n" +
 			"Log4j2 2.0 RC1";
 		
 		Label text = new Label(getWindowShell(), SWT.LEFT);
