@@ -24,61 +24,36 @@ The Android app requires a number of permissions.
   Required so the app can connect to the desktop server and send information.
 
 ### What stuff do you use?
-* [Py4j - A Python to Java communication library](http://py4j.sourceforge.net/)
+* [Standard Widget Toolkit](http://www.eclipse.org/swt/)
 * Netty 4.1.0-Beta3 on the Desktop Side
-* PyQt - For the UI
 * [Jackson JSON Processor](http://jackson.codehaus.org/)
-* Maven  (Java server & Python UI only.)
+* [QRGen w/ ZXING core](https://github.com/kenglxn/QRGen) for QRCode generation on desktop
+* Maven
 
 ### Building from source
-I use Eclipse extensively and have included the project files in each subfolder for each part.
-The Python UI (pyqt-ui) also has the pydev project files as well if you have that installed for Eclipse.
+The easiest way to build from source is to install Maven.
 
-While the Java server and UI use Maven to manage dependencies at the moment. I have not setup the Android side to use maven yet. The main reason being that I use Eclipse for my development and currently (as far as I know) M2Eclipse, Eclipse's built in Maven plugin, does not play well with doing Android builds inside the environment. What this means is you will need to make sure the library dependencies are on your build path when you create the APK or build/run in the IDE. I've included the copy of the libraries I have been using in the 'ext_libs' directory in the Android project folder.
+1. Clone the Repo
+2. Change Directory(cd) to the repo folder
+3. Run from the command line: `mvn package`
 
-For all intents and purposes, I will have these assumptions:
+You can find the desktop application in:
+`distribution/target/droid-<version>-bin/swt-ui/target/`
 
-1. You are using Eclipse.
-2. You have PyQT installed for Python.
-3. You have [Egit](http://www.eclipse.org/egit/) installed with Eclipse
-4. You have Maven installed.
-  * (Optional) You have [M2Eclipse](https://www.eclipse.org/m2e/) (Built maven support w/ Eclipse) if you want to get rid of reference errors in files and want to build/run inside Eclipse.
-5. You have the latest Android SDK installed with Eclipse.
+Building the Android side is a little more difficult and requires Eclipse, as far as I know, to do it. You'll also need to have M2Eclipse installed in order to resolve maven dependencies.
 
-#### 1. Importing into Eclipse
-1. In Eclipse, File > Import > Git > Projects from Git
-2. Select Clone URI
-3. Paste in the Clone URI from the repo. Next.
-4. You'll want the 'master' branch. Next.
-5. Select where you want the clone to go. This ideally should be where your local repos are stored. There are no submodules. Next.
-6. Select "Import existing projects." Next.
-7. You should see 3 projects.
-  * DroidNavi-Android
-  * DroidNavi-Server
-  * DroidNavi-UI
-8. Click finish and the projects will import.
-
-#### 2. Fixing reference errors in Eclipse for DroidNavi-Server & UI (Requires M2Eclipse)
-Likely after the projects are imported you will have errors due to Eclipse not being able to find dependencies.
-
-1. Right click on DroidNavi-Server
-2. Maven > Update Projects
-3. Select DroidNavi-Server and DroidNavi-UI.
-4. Select "Force Update of Snapshopts/Releases"
-5. Click Ok and give it a second. The reference errors should dissapear from the Server and UI projects.
-
-#### 3. Fix Android reference errors
-Next the support library must be added to fix reference errors
-* Right click DroidNavi-Android > Android Tools > Add support library...
-
-This should fix all the remaining errors.
-All the other external libraries are in the "ext_libs" folder and should already be part of the classpath if you used the Eclipse project files.
-
-#### 4. Building, Running, Making distrib for desktop server
-1. From command line/terminal navigate to the Root of the project git folder.
-2. Run the command: `mvn clean install assembly:single`
-  * This will build the server and copy the Python files into the "distribution" folder.
-3. To create the python exe. Change Directory to: /distribution/target/droidnavi-VERSION-bin/
-4. Run: `python setup.py py2exe`
-  * This will build the python code into an exe. You can find this in the /dist folder.
-5. Run "DroidNavi.exe" to start the server and UI.
+1. Open eclipse
+2. Import the eclipse project in `/server/` this is DroidNavi-Server.
+  * The Android app uses some of the classes from this project in order to communicate with the server.
+3. Import the eclipse project in `/android/AndroidTelelog/` this is DroidNavi-Android.
+4. Check the Build Path properties for the android project and make sure DroidNavi-Server is listed as a required project. If not, add it.
+  * This is done under the "Projects" tab in "Java Build Path."
+5. Also check that all the library jars in the `/ext_libs/` folder in the android project folder, are added under "Libraries" in the Java Build Path.
+6. Right click DroidNavi-Server's project in the Package Explorer window.
+7. Select Maven > Update Project.
+8. Do an update on the DroidNavi-Server project.
+  * This should resolve any of the reference errors present in the android project.
+9. Right click the Android project in Package Explorer.
+10. Select Android > Fix support library.
+  * This will fix reference errors for the support-v4 library.
+11. At this point all the reference errors should be gone. You should now be able to build and run the application in an emulator (API 16+) or create your own signed APK.
